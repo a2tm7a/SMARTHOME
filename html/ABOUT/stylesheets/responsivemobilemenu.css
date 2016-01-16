@@ -1,0 +1,160 @@
+/*
+
+Responsive Mobile Menu v1.0
+Plugin URI: responsivemobilemenu.com
+
+Author: Sergio Vitov
+Author URI: http://xmacros.com
+
+License: CC BY 3.0 http://creativecommons.org/licenses/by/3.0/
+
+*/
+
+.rmm {
+	display:block;
+	position:relative;
+	width:100%;
+	margin:0 auto !important;
+	text-align: right;
+	line-height:19px !important;
+	z-index: 1000;
+}
+.rmm * {
+	-webkit-tap-highlight-color:transparent !important;
+	font-family: 'Open Sans', sans-serif;
+}
+.rmm a {
+	color:#fff;
+	z-index: 1000;
+	text-decoration:none;
+}
+.rmm .rmm-main-list, .rmm .rmm-main-list li {
+	margin:0px;
+	padding:0px;
+}
+.rmm ul {
+	display:block;
+	width:auto !important;
+	margin:0 auto !important;
+	overflow:hidden;
+	list-style:none;
+}
+
+
+/* sublevel menu - in construction */
+.rmm ul li ul, .rmm ul li ul li, .rmm ul li ul li a {
+	display:none !important;
+	height:0px !important;
+	width:0px !important;
+}
+/* */
+
+
+.rmm .rmm-main-list li {
+	display:inline;
+	padding:padding:0px;
+	margin:0px !important;
+}
+.rmm-toggled {
+	display:none;
+	width:100%;
+	position:relative;
+	overflow:hidden;
+	margin:0 auto !important;
+}
+.rmm-button:hover {
+	cursor:pointer;
+}
+.rmm .rmm-toggled ul {
+	display:none;
+	margin:0px !important;
+	padding:0px !important;
+}
+.rmm .rmm-toggled ul li {
+	display:block;
+	margin:0 auto !important;
+}
+
+
+
+/* MINIMAL STYLE */
+
+.rmm.minimal a {
+	color:#fff;
+	font-weight: 600;
+	z-index: 300;
+}
+.rmm.minimal a:hover {
+	opacity:1;
+	color: #334d66;
+	font-weight: 600;
+}
+.rmm.minimal .rmm-main-list li a {
+	display:inline-block;
+	padding:8px 10px 8px 10px;
+	margin:0px 10px 0px -3px;
+	font-size:14px;
+	border: 2px solid #fff;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px; 
+}
+
+.rmm.minimal .rmm-main-list li a:hover {
+    border-color: #e09224;
+    background-color: #e09224;
+}
+
+.rmm.minimal .rmm-toggled {
+	width:95%;
+	min-height:26px;
+}
+.rmm.minimal .rmm-toggled-controls {
+	display:block;
+	height:36px;
+	color:#fff;
+	font-weight: 600;
+	text-align:left;
+	position:relative;
+}
+.rmm.minimal .rmm-toggled-title {
+	position:relative;
+	top:9px;
+	left:9px;
+	font-size:14px;
+	color:#fff;
+	font-weight: 600;
+}
+.rmm.minimal .rmm-button {
+	display:block;
+	position:absolute;
+	right:9px;
+	top:7px;
+}
+
+.rmm.minimal .rmm-button span {
+	display:block;
+	margin:4px 0px 4px 0px;
+	height:2px;
+    background:#fff;
+	width:25px;
+}
+.rmm.minimal .rmm-toggled ul li a {
+	display:block;
+	width:100%;
+	text-align:center;
+	padding:10px 0px 10px 0px;
+	border-bottom:1px solid #fff;
+	color:#fff;
+	font-weight: 600;
+}
+.rmm.minimal .rmm-toggled ul li:first-child a {
+	border-top:1px solid #fff;
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+
+
+
+}
