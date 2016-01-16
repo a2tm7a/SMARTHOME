@@ -377,8 +377,8 @@ p {
 
 .skills {
 	background-color: #bf5a24;
-	padding-top: 60px;
-	padding-bottom: 80px;
+	padding-top: 30px;
+	padding-bottom: 40px;
 }
 
 #skillbar { 
@@ -433,50 +433,69 @@ p {
 
 .html {
 	width:95%; 
-	-moz-animation: html 15s ease-out;
-	-webkit-animation: html 15s ease-out;
+	-moz-animation: html 5s ease-out;
+	-webkit-animation: html 5s ease-out;
 	background-color: #334d66;
 }
 
 .css {
 	width:90%;
-	-moz-animation: css 15s ease-out;
-	-webkit-animation: css 15s ease-out;
+	-moz-animation: css 5s ease-out;
+	-webkit-animation: css 5s ease-out;
 	background-color: #334d66;
 }
 
 .java {
 	width:55%;
-	-moz-animation: java 15s ease-out;
-	-webkit-animation: java 15s ease-out;
+	-moz-animation: java 5s ease-out;
+	-webkit-animation: java 5s ease-out;
 	background-color: #334d66;
 }
 
-.php {
+.python {
 	width:65%;
-	-moz-animation: php 15s ease-out;
-	-webkit-animation: php 15s ease-out;
+	-moz-animation: python 5s ease-out;
+	-webkit-animation: python 5s ease-out;
 	background-color: #334d66;	
 }
 
 .psd {
 	width:85%;
-	-moz-animation: psd 15s ease-out;
-	-webkit-animation: psd 15s ease-out;
+	-moz-animation: psd 5s ease-out;
+	-webkit-animation: psd 5s ease-out;
 	background-color: #334d66;	
+}
+
+.arduino {
+  width:95%;
+  -moz-animation: arduino 5s ease-out;
+  -webkit-animation: arduino 5s ease-out;
+  background-color: #334d66;  
+}
+
+.hardware {
+  width:95%;
+  -moz-animation: hardware 5s ease-out;
+  -webkit-animation: hardware 5s ease-out;
+  background-color: #334d66;  
 }
 
 @-moz-keyframes html {0%  { width:0px;} 100%{ width:95%;}  }
 @-moz-keyframes css        { 0%  { width:0px;} 100%{ width:90%;}  }
 @-moz-keyframes java      { 0%  { width:0px;} 100%{ width:55%;}  }
-@-moz-keyframes php   { 0%  { width:0px;} 100%{ width:65%;}  }
+@-moz-keyframes python   { 0%  { width:0px;} 100%{ width:65%;}  }
 @-moz-keyframes psd   { 0%  { width:0px;} 100%{ width:85%;}  }
+@-moz-keyframes arduino {0%  { width:0px;} 100%{ width:95%;}  }
+@-moz-keyframes hardware {0%  { width:0px;} 100%{ width:95%;}  }
+
 
 @-webkit-keyframes html       { 0%  { width:0px;} 100%{ width:95%;}  }
 @-webkit-keyframes css        { 0%  { width:0px;} 100%{ width:90%;}  }
 @-webkit-keyframes java      { 0%  { width:0px;} 100%{ width:55%;}  }
-@-webkit-keyframes php   { 0%  { width:0px;} 100% { width:65%;}  }
+@-webkit-keyframes python   { 0%  { width:0px;} 100% { width:65%;}  }
 @-webkit-keyframes psd   { 0%  { width:0px;} 100% { width:85%;}  }
+@-webkit-keyframes arduino   { 0%  { width:0px;} 100% { width:95%;}  }
+@-webkit-keyframes hardware   { 0%  { width:0px;} 100% { width:95%;}  }
 
 
 /* #Portfolio */
