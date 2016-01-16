@@ -202,14 +202,14 @@
         transition: all 1s ease;
     }
     
-    #zoom:hover {
+   /* #zoom:hover {
         width: 180px;
         height: 180px;
         border: 4px solid #334d66;
         border-radius: 180px;
 	    -webkit-border-radius: 180px;
 	    -moz-border-radius: 180px;
-    }
+    }*/
 
 
 /* #Forms
