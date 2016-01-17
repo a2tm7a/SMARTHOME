@@ -5,22 +5,6 @@ import staticFilesForAbout
 import staticFilesForLogin
 import staticFilesForApplication
 
-@get('/logintest') # or @route('/login')
-def login():
-	return '''
-		<form action="/login" method="post">
-           	Username: <input name="username" type="text" />
-            	Password: <input name="password" type="password" />
-            	<input value="Login" type="submit" />
-        	</form>
-   		'''
-
-
-@post('/logintest') # or @route('/login', method='POST')
-def do_login():
-	username = request.forms.get('username')
-	password = request.forms.get('password')
-	return template("<p>{{name}} {{pass1}}</p>",name=username, pass1=password)
 
 
 @route('/')
@@ -61,4 +45,28 @@ def toggle():
 
 
 
-run(host='localhost', port=8080, debug=True)
+#Mobile ENDPOINTS
+
+@get('/logintest') # or @route('/login')
+def login():
+	return '''
+		<form action="/login" method="post">
+           	Username: <input name="username" type="text" />
+            	Password: <input name="password" type="password" />
+            	<input value="Login" type="submit" />
+        	</form>
+   		'''
+
+
+@post('/logincheck') # or @route('/login', method='POST')
+def do_login():
+	username = request.forms.get('username')
+	password = request.forms.get('password')
+	if(username == configs_user['username'] and password == configs_user['password']):
+		return "1"
+
+	else:
+		return "0"
+
+
+run(host='192.168.43.17', port=8080, debug=True)
