@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/frame">
+        <!--android:layout_marginTop="100dp"-->
+
+
+        <!-- <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+
+            android:src="@drawable/dc"
+            android:id="@+id/logologin"
+            android:layout_gravity="center" />
+-->
+
+
+        <!--<de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/logologin"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+
+            app:border_width="2sp"
+            app:border_color="#FF000000"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center" />
+-->
+        <ImageView
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:id="@+id/logologin"
+            android:src="@drawable/ic_menu_slideshow"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal|center" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingRight="10sp"
+            android:paddingLeft="10sp"
+            android:gravity="center"
+            android:id="@+id/linear_layout_username_password"
+            android:layout_gravity="center_horizontal|center">
+
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="Username"
+                android:textSize="16sp"
+                android:ems="10"
+                android:id="@+id/etUsername"
+
+                android:layout_marginTop="38sp" />
+
+
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:textSize="16sp"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/etPassword"
+
+                android:layout_marginTop="40sp" />
+
+
+
+            <!--            <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Login"
+                            android:id="@+id/btnLogin"
+                            android:textSize="16sp"
+                            android:layout_marginTop="56sp"
+                            android:background="#ef5350"
+                            android:textColor="#ffffffff"
+                            android:layout_gravity="center_horizontal"
+
+                            />-->
+            <Button
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:id="@+id/btnLogin"
+                android:textSize="16sp"
+                android:layout_marginTop="56sp"
+                android:background="@drawable/rounded_corner"
+                android:textColor="#ffffffff"
+                android:elevation="2sp"
+
+                />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4sp"
+                android:layout_marginRight="1sp"
+                android:layout_marginLeft="1sp"
+                android:background="@drawable/shadow" />
+
+
+        </LinearLayout>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_marginBottom="50sp"
+            android:id="@+id/progressBar"
+            android:layout_gravity="bottom|center"
+            android:indeterminate="false"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
+
+</android.support.v4.widget.DrawerLayout>
