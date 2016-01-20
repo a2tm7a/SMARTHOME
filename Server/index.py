@@ -69,4 +69,4 @@ def do_login():
 		return "0"
 
 
-run(host='192.168.43.17', port=8080, debug=True)
+run(host='localhost', port=8080, debug=True)
