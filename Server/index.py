@@ -15,14 +15,14 @@ def greet(name='Stranger'):
 
 
 @get('/login')
-def login(name='Stranger'):
+def login_page(name='Stranger'):
 	print 'hello'
 	print os.path.dirname(os.path.abspath(__file__))
 	return static_file('index.html', root="/home/manchanda/Projects/SMARTHOME/html/Login")
 
 
 @post('/login') # or @route('/login', method='POST')
-def do_login():
+def login():
 	username = request.forms.get('userID')
 	password = request.forms.get('KEY')
 	if(username == configs_user['username'] and password == configs_user['password']):
@@ -58,8 +58,13 @@ def login():
    		'''
 
 
+@post('/data') # or @route('/login', method='POST')
+def data():
+	data=getdata()
+	return data
+
 @post('/logincheck') # or @route('/login', method='POST')
-def do_login():
+def checklogin():
 	username = request.forms.get('username')
 	password = request.forms.get('password')
 	if(username == configs_user['username'] and password == configs_user['password']):
@@ -69,4 +74,9 @@ def do_login():
 		return "0"
 
 
-run(host='localhost', port=8080, debug=True)
+
+def getdata():
+	return "Test data"
+
+
+run(host='192.168.43.65', port=8080, debug=True)

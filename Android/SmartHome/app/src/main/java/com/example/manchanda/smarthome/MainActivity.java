@@ -3,7 +3,10 @@ package com.example.manchanda.smarthome;
 import android.animation.Animator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.Editable;
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity
 
     EditText txtUsername;
     EditText txtPassword;
+
+    SharedPreferences sharedpreferences;
 
     static String IP_Address=null;
 
@@ -73,6 +78,20 @@ public class MainActivity extends AppCompatActivity
         /**
          * Toolbar
          */
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String login_check = preferences.getString("login","");
+
+        /**
+         * JUST TO GO TO CONTROLLER CLASS FOR TESTING
+         */
+        if(!login_check.equalsIgnoreCase("1"))
+        {
+            Intent i = new Intent(getApplicationContext(),Controller.class);
+            startActivity(i);
+            this.finish();
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -259,12 +278,47 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onResult(int code, int check, String data) {
-        if(check == 0)
+        if(code == CommonUtilities.Code_LoginRequest)
         {
-            Log.v("Login","Ending the login activity");
-            Toast.makeText(getApplicationContext(),"Successfully Login",Toast.LENGTH_LONG).show();
+            if(check == 0)
+            {
+                Log.v("Login","Ending the login activity");
+                Toast.makeText(getApplicationContext(),"Successfully Login",Toast.LENGTH_LONG).show();
+
+
+
+                DataRequest obj_datarequest = new DataRequest(MainActivity.this, spinner, MainActivity.this);
+
+                /**
+                 * Starting to make http request
+                 */
+
+                try {
+                    spinner.setVisibility(View.VISIBLE);
+                    obj_datarequest.execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    spinner.setVisibility(View.INVISIBLE);
+                    login_btn_clicked = false;
+                }
+
+
+
+
+
+            }
+            else
+                Toast.makeText(getApplicationContext(),"UNSuccessfully Login",Toast.LENGTH_LONG).show();
+
         }
-        else
-            Toast.makeText(getApplicationContext(),"UNSuccessfully Login",Toast.LENGTH_LONG).show();
+        else if (code == CommonUtilities.Code_Data)
+        {
+            /**
+             * Send Data with it
+             */
+            Intent i = new Intent(getApplicationContext(),Controller.class);
+            startActivity(i);
+            this.finish();
+        }
     }
 }

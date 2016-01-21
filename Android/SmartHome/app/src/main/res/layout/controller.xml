@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Auto Mode"
+        android:id="@+id/switch_auto_mode"
+        android:layout_gravity="right"
+        android:checked="false"
+         />
+
+   <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal">
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/image_bulb"
+            android:scaleType="fitCenter"
+            android:src="@drawable/bulb_off"
+            android:layout_gravity="left"
+             />
+
+        <ImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/CURTAINS_CLOSED"
+            android:id="@+id/curtains_closed"
+            android:scaleType="fitCenter" />
+
+   </LinearLayout>
+</LinearLayout>
