@@ -79,4 +79,4 @@ def getdata():
 	return "Test data"
 
 
-run(host='192.168.43.65', port=8080, debug=True)
+run(host='localhost', port=8080, debug=True)
