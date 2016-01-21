@@ -35,7 +35,7 @@ h2 {
     font-weight: 700;
     font-size: 40px;
     margin-bottom: 20px;
-    margin-top: 20px;
+   /* margin-top: 20px;*/
 }
 
 h3 {
@@ -351,16 +351,16 @@ p {
 
 .service {
 	background-color: #e09224;
-	padding-top: 60px;
-	padding-bottom: 80px;
+	padding-top: 30px;
+	padding-bottom: 30px;
 }
 
 /* #Team */
 
 .team {
 	background-color: #fff;
-	padding-top: 60px;
-	padding-bottom: 80px;
+	padding-top: 30px;
+	padding-bottom: 30px;
 }
 
 .social img{
@@ -390,9 +390,9 @@ p {
 }
 
 #skillbar li { 
-	margin-bottom:30px; 
+	margin-bottom:10px; 
 	background: #fff;  
-	height:40px; 
+	height:30px; 
 	border-top-right-radius: 20px;
 	border-bottom-right-radius: 20px;
 	-moz-border-radius-top-right: 20px;
@@ -414,7 +414,7 @@ p {
 }
 
 .skillbar { 
-	height:36px; 
+	height:26px; 
 	margin:2px 2px;  
 	position:absolute;
 	border-top-right-radius: 20px;
@@ -502,8 +502,8 @@ p {
 
 #portfolio {
 	background-color: #decdb6;
-	padding-top: 60px;
-	padding-bottom: 80px;
+	padding-top: 30px;
+	padding-bottom: 30px;
 }
 
 /* Filter */
@@ -575,8 +575,8 @@ p {
 
 #price {
 	background-color: #bf5a24;
-	padding-top: 60px;
-	padding-bottom: 80px;
+	padding-top: 30px;
+	padding-bottom: 30px;
 }
 
 .intro {
@@ -649,7 +649,7 @@ th {
 #contactform {
 	background-color: #334d66;
 	padding-top: 60px;
-	padding-bottom: 80px;
+	padding-bottom: 30px;
 }
 
 .form input,
