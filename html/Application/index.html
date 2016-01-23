@@ -14,6 +14,12 @@
     <link rel="stylesheet" href="Application/css/templatemo_misc.css">
    	<link type="text/css" rel="stylesheet" href="Application/css/easy-responsive-tabs.css" />
     <link href="Application/css/templatemo_style.css" rel="stylesheet"> 
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,700,300italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,300,700' rel='stylesheet' type='text/css'>
+    <link href="css/font-awesome/font-awesome.css" rel="stylesheet">
+    <!--<link href="Application/css/base.css" rel="stylesheet">-->
+    <link href="Application/css/style.css" rel="stylesheet">
+
         
 	<script src="Application/js/jquery-1.10.2.min.js"></script> 
 	<script src="Application/js/jquery.lightbox.js"></script>
@@ -44,6 +50,13 @@
     <div class="logocontainer">
     	<div class="row">
         	<h1><a href="#">Matrix</a></h1>
+            
+            <div class="switch" style="float:right; padding-top:5%">
+            <input id="cmn-toggle-8" class="cmn-toggle cmn-toggle-yes-no" type="checkbox" {{automatic}} onchange='handleChange(this);'>
+            <label for="cmn-toggle-8" data-on="Automatic!" data-off="Manual"></label>
+            </div>
+            
+
             <div class="clear"></div>
             <div class="templatemo_smalltitle">Free HTML5 Template</div>
        </div>
@@ -58,7 +71,7 @@
                 	<div class="templatemo_link"><a class="show-2 templatemo_page2" href="#">Services</a></div>
                 	
                 </div>
-                <div class="templatemo_mainimg"><img src="Application/images/templatemo_home1.jpg" alt="home img 01"></div>
+                <div class="templatemo_mainimg"><img id="Security_Image" src="Application/images/{{security}}" alt="home img 01" onclick="toggleSecurity()"></div>
             </div>
             <div class="col-md-3 col-sm-6 templatemo_leftgap">
             	<div class="templatemo_mainimg templatemo_botgap templatemo_portfotopgap"><img id="Bulb_Image" src="Application/images/{{light}}" alt="home img 02" onclick="toggleBulb()"></div>
@@ -438,6 +451,56 @@
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("status="+status+"&Interface=Website");
         
+    }
+
+
+
+    function toggleSecurity() {
+        var xhttp = new XMLHttpRequest();
+        var status=-1;
+        var image = document.getElementById('Security_Image');
+        if (image.src.match("doorSecurityOn")) {
+              status=0;
+        } else {
+              status=1;
+        }
+        xhttp.onreadystatechange = function() {
+          if (xhttp.readyState == 4 && xhttp.status == 200) {
+            var image = document.getElementById('Security_Image');
+
+                if (image.src.match("doorSecurityOn")) {
+                    image.src = "Application/images/doorSecurityOff.png";
+                } else {
+                    image.src = "Application/images/doorSecurityOn.png";
+                }
+          }
+        };
+        xhttp.open("POST", "/security_control", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("status="+status+"&Interface=Website");
+        
+    }
+
+
+    function handleChange(cb) {
+
+      var xhttp = new XMLHttpRequest();
+      var status=-1;
+      if (cb.checked == true) {
+            status=1;
+      } else {
+            status=0;
+      }
+      xhttp.onreadystatechange = function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+              
+        }
+      };
+      xhttp.open("POST", "/automatic_control", true);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send("status="+status+"&Interface=Website");
+      
+
     }
 
     function changeFan() {

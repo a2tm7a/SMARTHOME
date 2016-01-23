@@ -44,8 +44,9 @@ def login():
 	if(username == configs_user['username'] and password == configs_user['password']):
 		condition_light="SELECT Status FROM Lights ORDER BY Time DESC LIMIT 1"
 		condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
-		condition_curatin="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
+		condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
 		condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
+		condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
 		try:
 			cursor.execute(condition_light)
 			results = cursor.fetchall()
@@ -57,22 +58,48 @@ def login():
 			print results[0][0]
 			fan_status=results[0][0]
 
-			cursor.execute(condition_curatin)
+			cursor.execute(condition_curtain)
 			results = cursor.fetchall()
 			print results[0][0]
 			curtain_status=results[0][0]
+
+			cursor.execute(condition_security)
+			results = cursor.fetchall()
+			print results[0][0]
+			security_status=results[0][0]
+
+
+			cursor.execute(condition_automaticmode)
+			results = cursor.fetchall()
+			print results[0][0]
+			automatic_status=results[0][0]
 
 
 			if(light_status == 0):
 				lights="bulb_off.png"
 			else:
 				lights="bulb_on.png"
+
+
+			if(automatic_status == 0):
+				automatic="unchecked"
+			else:
+				automatic="checked"
+			
+
 			
 			if(curtain_status == 0):
 				curtains="CURTAINS_CLOSED.png"
 			else:
 				curtains="CURTAINS_OPEN.png"
 			
+
+			if(security_status == 0):
+				security="doorSecurityOff.png"
+			else:
+				security="doorSecurityOn.png"
+
+
 
 			if(fan_status == 0):
 				fans="FAN_speed0.png"
@@ -91,7 +118,7 @@ def login():
 		except:
 			print "DB Error" 
 		
-		return template('/home/manchanda/Projects/SMARTHOME/html/Application/index.html',light=lights, fan=fans, curtain=curtains)
+		return template('/home/manchanda/Projects/SMARTHOME/html/Application/index.html',light=lights, fan=fans, curtain=curtains, security=security, automatic=automatic)
 	else:
 		return template("<p> Login unsuccessful {{name}} {{pass1}} </p>",name=username, pass1=password)
 
@@ -114,6 +141,26 @@ def toggle():
 	print condition_light
 	try:
 		cursor.execute(condition_light)
+		db.commit()
+		
+
+	except MySQLdb.Error, e:
+		print e.args[0],e.args[1]
+		db.rollback() 
+	return "toggle"
+
+
+@post('/security_control')
+def toggle():
+	print "Hello Security are toggle"
+	status = request.forms.get('status')
+	status = int(status)
+	Interface = request.forms.get('Interface')
+	print Interface
+	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+	print condition_security
+	try:
+		cursor.execute(condition_security)
 		db.commit()
 		
 
@@ -154,6 +201,26 @@ def toggle():
 	print condition_curtains
 	try:
 		cursor.execute(condition_curtains)
+		db.commit()
+		
+	except MySQLdb.Error, e:
+		print e.args[0],e.args[1]
+		db.rollback() 
+	return "Changed"
+
+
+
+@post('/automatic_control')
+def toggle():
+	print "Hello automatic_control changed"
+	status = request.forms.get('status')
+	status = int(status)
+	Interface = request.forms.get('Interface')
+	print Interface
+	condition_automaticmode="INSERT INTO AutomaticMode(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+	print condition_automaticmode
+	try:
+		cursor.execute(condition_automaticmode)
 		db.commit()
 		
 	except MySQLdb.Error, e:
