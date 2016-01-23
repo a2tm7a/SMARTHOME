@@ -1,7 +1,9 @@
 configs_db={
-	'username':'root',
-	'password':'qwerty' 
-}
+	'user': 'root',
+	'password': 'Bakchodi123',
+	'host': 'localhost',
+	'database': 'SmartHome'
+  }
 configs_user={
 	'username':'admin',
 	'password':'hello123'

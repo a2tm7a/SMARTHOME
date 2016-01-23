@@ -22,16 +22,17 @@
             android:layout_height="100dp"
             android:id="@+id/image_bulb"
             android:scaleType="fitCenter"
-            android:src="@drawable/bulb_off"
+            android:src="@drawable/ic_menu_slideshow"
             android:layout_gravity="left"
              />
 
         <ImageButton
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/CURTAINS_CLOSED"
+            android:src="@drawable/ic_menu_camera"
             android:id="@+id/curtains_closed"
             android:scaleType="fitCenter" />
 
    </LinearLayout>
+
 </LinearLayout>

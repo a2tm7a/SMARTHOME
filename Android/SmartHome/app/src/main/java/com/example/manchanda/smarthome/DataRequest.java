@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.manchanda.smarthome.CommonUtilities.DATA_URL;
-import static com.example.manchanda.smarthome.CommonUtilities.LOGIN_URL;
+
 
 /**
  * Created by manchanda on 22/1/16.

@@ -85,12 +85,12 @@ public class MainActivity extends AppCompatActivity
         /**
          * JUST TO GO TO CONTROLLER CLASS FOR TESTING
          */
-        if(!login_check.equalsIgnoreCase("1"))
+        /*if(!login_check.equalsIgnoreCase("1"))
         {
             Intent i = new Intent(getApplicationContext(),Controller.class);
             startActivity(i);
             this.finish();
-        }
+        }*/
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -299,7 +299,6 @@ public class MainActivity extends AppCompatActivity
                 } catch (Exception e) {
                     e.printStackTrace();
                     spinner.setVisibility(View.INVISIBLE);
-                    login_btn_clicked = false;
                 }
 
 

@@ -23,7 +23,7 @@ public class CommonUtilities {
         static final int Code_LoginRequest=2;
 
 
-        static final int Code_Data=2;
+        static final int Code_Data=1;
 
         static final String DISPLAY_MESSAGE_ACTION =
                 "com.example.manchanda.smarthome.DISPLAY_MESSAGE";
