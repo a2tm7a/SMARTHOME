@@ -18,11 +18,11 @@
        android:layout_height="wrap_content"
        android:orientation="horizontal">
         <ImageButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="145dp"
+            android:layout_height="145dp"
             android:id="@+id/image_bulb"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_menu_slideshow"
+            android:src="@drawable/fan_speed0"
             android:layout_gravity="left"
              />
 

@@ -41,7 +41,7 @@ public class Controller extends AppCompatActivity implements ResultListener {
 
         if(bulb_data.equalsIgnoreCase("1"))
         {
-            bulb.setImageResource(R.drawable.ic_menu_send);
+            bulb.setImageResource(R.drawable.fan_speed0);
             bulb_status=1;
         }
         else {
@@ -105,7 +105,7 @@ public class Controller extends AppCompatActivity implements ResultListener {
                 Log.d("onResult","inside the endpoint "+endpoint+data);
 
                 if(data.equalsIgnoreCase("1\n")) {
-                    bulb.setImageResource(R.drawable.ic_menu_send);
+                    bulb.setImageResource(R.drawable.fan_speed0);
                     bulb_status=1;
                     spinner.setVisibility(View.INVISIBLE);
                     Log.d("Inside onResult","COntroller");
