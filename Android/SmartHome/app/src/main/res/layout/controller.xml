@@ -30,9 +30,20 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/ic_menu_camera"
-            android:id="@+id/curtains_closed"
-            android:scaleType="fitCenter" />
+            android:id="@+id/image_curtains"
+            android:scaleType="fitCenter"
+            android:layout_gravity="right"
+            />
 
    </LinearLayout>
+    <ProgressBar
+    style="?android:attr/progressBarStyleLarge"
+    android:layout_width="50sp"
+    android:layout_height="50sp"
+    android:layout_marginBottom="50sp"
+    android:id="@+id/progressBar_controller"
+    android:layout_gravity="bottom|center"
+    android:indeterminate="false"
+    android:visibility="invisible"/>
 
 </LinearLayout>

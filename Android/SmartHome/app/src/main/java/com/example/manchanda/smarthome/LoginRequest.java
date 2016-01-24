@@ -172,11 +172,11 @@ public class LoginRequest extends AsyncTask<Void,Void,Void> {
         spinner.setVisibility(View.INVISIBLE);
         if(check_login_error!=0)
         {
-            listener.onResult(Code_LoginRequest,check_login_error,"Error");
+            listener.onResult(Code_LoginRequest,check_login_error,"Error","");
         }
         else
         {
-            listener.onResult(Code_LoginRequest,check_login_error,"Successful Login");
+            listener.onResult(Code_LoginRequest,check_login_error,"Successful Login","");
         }
 
     }

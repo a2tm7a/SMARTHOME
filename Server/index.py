@@ -147,7 +147,7 @@ def toggle():
 	except MySQLdb.Error, e:
 		print e.args[0],e.args[1]
 		db.rollback() 
-	return "toggle"
+	return request.forms.get('status')
 
 
 @post('/security_control')
@@ -246,7 +246,45 @@ def login():
 
 @post('/data') # or @route('/login', method='POST')
 def data():
-	data=getdata()
+	
+	condition_light="SELECT Status FROM Lights ORDER BY Time DESC LIMIT 1"
+	condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
+	condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
+	condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
+	condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
+	data=""
+	try:
+		cursor.execute(condition_light)
+		results = cursor.fetchall()
+		print results[0][0]
+		light_status=results[0][0]
+
+		cursor.execute(condition_fan)
+		results = cursor.fetchall()
+		print results[0][0]
+		fan_status=results[0][0]
+
+		cursor.execute(condition_curtain)
+		results = cursor.fetchall()
+		print results[0][0]
+		curtain_status=results[0][0]
+
+		cursor.execute(condition_security)
+		results = cursor.fetchall()
+		print results[0][0]
+		security_status=results[0][0]
+
+
+		cursor.execute(condition_automaticmode)
+		results = cursor.fetchall()
+		print results[0][0]
+		automatic_status=results[0][0]
+
+		data={'lights':light_status, 'fan':fan_status, 'curtains':curtain_status, 'security':security_status, 'automatic':automatic_status}
+	except MySQLdb.Error, e:
+		print e.args[0],e.args[1]
+		db.rollback()  
+
 	return data
 
 @post('/logincheck') # or @route('/login', method='POST')
@@ -271,4 +309,4 @@ def senddata():
 
 
 
-run(host='localhost', port=8080, debug=True)
+run(host='192.168.0.113', port=8080, debug=True)

@@ -15,13 +15,20 @@ public class CommonUtilities {
         }
 
         static String DATA_URL(String Ip)
-    {
+        {
         return "http://"+Ip+":8080/data";
-    }
+        }
+
+        static String APPLICATION_URL(String Ip,String endpoint)
+        {
+        return "http://"+Ip+":8080/"+endpoint;
+        }
+
 
 
         static final int Code_LoginRequest=2;
 
+        static final int Code_Application=3;
 
         static final int Code_Data=1;
 

@@ -30,6 +30,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ResultListener {
@@ -277,7 +281,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResult(int code, int check, String data) {
+    public void onResult(int code, int check, String data, String endpoint) {
         if(code == CommonUtilities.Code_LoginRequest)
         {
             if(check == 0)
@@ -315,9 +319,22 @@ public class MainActivity extends AppCompatActivity
             /**
              * Send Data with it
              */
-            Intent i = new Intent(getApplicationContext(),Controller.class);
-            startActivity(i);
-            this.finish();
+            try {
+                Intent i = new Intent(getApplicationContext(),Controller.class);
+                JSONObject jsonObject = new JSONObject(data);
+                i.putExtra("lights", jsonObject.getString("lights"));
+                i.putExtra("security", jsonObject.getString("security"));
+                i.putExtra("fan", jsonObject.getString("fan"));
+                i.putExtra("automatic", jsonObject.getString("automatic"));
+                i.putExtra("curtains", jsonObject.getString("curtains"));
+                startActivity(i);
+                this.finish();
+                Log.d("lights",jsonObject.getString("lights"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(),"Error try again",Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 }

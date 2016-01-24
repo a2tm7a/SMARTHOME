@@ -19,22 +19,26 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.manchanda.smarthome.CommonUtilities.APPLICATION_URL;
 import static com.example.manchanda.smarthome.CommonUtilities.DATA_URL;
 
-
 /**
- * Created by manchanda on 22/1/16.
+ * Created by manchanda on 24/1/16.
  */
-public class DataRequest extends AsyncTask<Void,Void,Void> {
+public class ApplicationRequest extends AsyncTask<Void,Void,Void> {
 
     Context context;
     ProgressBar spinner;
     ResultListener listener;
     String data;
+    String status;
+    String Interface="Android App";
+    String endpoint;
 
-    public DataRequest(Context context, ProgressBar spinner, ResultListener listener){
+    public ApplicationRequest(Context context, ProgressBar spinner, ResultListener listener, String endpoint, String status){
         this.context=context;
-
+        this.status=status;
+        this.endpoint=endpoint;
         this.spinner=spinner;
         this.listener=listener;
 
@@ -49,22 +53,27 @@ public class DataRequest extends AsyncTask<Void,Void,Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        Log.d("DataRequest", "Inside doInBackgroud");
+        Log.d("ApplicationRequest", "Inside doInBackgroud");
         try {
 
 
-            String data_url= DATA_URL(MainActivity.IP_Address);
+            String data_url= APPLICATION_URL(MainActivity.IP_Address, endpoint);
 
 
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(data_url);
-            Log.d("dataurl=" , data_url) ;
+            Log.d("applicationurl=" , data_url) ;
 
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("status", status));
+            nameValuePairs.add(new BasicNameValuePair("Interface", Interface));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
 
-            Log.d("First Fetch Request", "HTTP");
+            Log.d("Application Request", "HTTP");
             BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
             sb.append(reader.readLine() + "\n");
@@ -97,10 +106,10 @@ public class DataRequest extends AsyncTask<Void,Void,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Log.d("Inside ON post Execute of First Fetch Request","successful");
+        Log.d("Inside ON post Execute of Application Request","successful");
         //dialog.dismiss();
-        Log.d("FirstFetch","OnPostExecute");
+        Log.d("Application","OnPostExecute");
 
-        listener.onResult(CommonUtilities.Code_Data,0, data,"");
+        listener.onResult(CommonUtilities.Code_Application,0, data,endpoint);
     }
 }

@@ -1,0 +1,6 @@
+<root>
+  <item
+      name='android.graphics.drawable.Drawable android.graphics.drawable.Drawable.ConstantState getConstantState()'>
+    <annotation name='java.lang.annotation.Deprecated' />
+  </item>
+</root>
