@@ -35,13 +35,13 @@ public class Controller extends AppCompatActivity implements ResultListener {
         curtains=(ImageButton)findViewById(R.id.image_curtains);
         spinner=(ProgressBar)findViewById(R.id.progressBar_controller);
 
-        final String bulb_data = getIntent().getExtras().getString("lights");
+        String bulb_data = getIntent().getExtras().getString("lights");
         String curtain_data = getIntent().getExtras().getString("curtains");
         Log.d(bulb_data,curtain_data);
 
         if(bulb_data.equalsIgnoreCase("1"))
         {
-            bulb.setImageResource(R.drawable.fan_speed0);
+            bulb.setImageResource(R.drawable.fan_speed_android1);
             bulb_status=1;
         }
         else {
@@ -105,7 +105,7 @@ public class Controller extends AppCompatActivity implements ResultListener {
                 Log.d("onResult","inside the endpoint "+endpoint+data);
 
                 if(data.equalsIgnoreCase("1\n")) {
-                    bulb.setImageResource(R.drawable.fan_speed0);
+                    bulb.setImageResource(R.drawable.fan_speed_android1);
                     bulb_status=1;
                     spinner.setVisibility(View.INVISIBLE);
                     Log.d("Inside onResult","COntroller");

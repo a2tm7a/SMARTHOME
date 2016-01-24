@@ -23,14 +23,14 @@ import time
 db = MySQLdb.connect(configs_db["host"],configs_db["user"],configs_db["password"],configs_db["database"])
 cursor = db.cursor()
 
-ser = serial.Serial(
+'''ser = serial.Serial(
         port='/dev/ttyAMA0',
         baudrate = 9600,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS,
         timeout=1
-)
+)'''
 
 
 @route('/')
@@ -169,7 +169,7 @@ def toggle():
 	print Interface
 	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
 	print condition_security
-
+	'''
 	if(status==1):
                 ser.write('t')
                 #senddata('t')
@@ -177,8 +177,8 @@ def toggle():
                 #senddata('s')
                 ser.write('s')
         condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        
-        print condition_security
+ 	'''       
+ 	print condition_security
 	try:
 		cursor.execute(condition_security)
 		db.commit()

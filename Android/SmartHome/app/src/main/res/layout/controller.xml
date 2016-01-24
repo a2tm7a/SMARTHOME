@@ -22,7 +22,7 @@
             android:layout_height="145dp"
             android:id="@+id/image_bulb"
             android:scaleType="fitCenter"
-            android:src="@drawable/fan_speed0"
+            android:src="@drawable/fan_speed_android1"
             android:layout_gravity="left"
              />
 
