@@ -187,7 +187,7 @@ def toggle():
 	except MySQLdb.Error, e:
 		print e.args[0],e.args[1]
 		db.rollback() 
-	return "toggle"
+	return request.forms.get('status')
 
 
 @post('/fan_control')
@@ -206,7 +206,7 @@ def toggle():
 	except MySQLdb.Error, e:
 		print e.args[0],e.args[1]
 		db.rollback() 
-	return "Changed"
+	return request.forms.get('status')
 
 
 
@@ -226,7 +226,7 @@ def toggle():
 	except MySQLdb.Error, e:
 		print e.args[0],e.args[1]
 		db.rollback() 
-	return "Changed"
+	return request.forms.get('status')
 
 
 
@@ -246,8 +246,7 @@ def toggle():
 	except MySQLdb.Error, e:
 		print e.args[0],e.args[1]
 		db.rollback() 
-	return "Changed"
-
+	return request.forms.get('status')
 
 
 
@@ -329,4 +328,4 @@ def senddata():
 
 
 
-run(host='192.168.0.113', port=8080, debug=True)
+run(host='192.168.0.120', port=8080, debug=True)

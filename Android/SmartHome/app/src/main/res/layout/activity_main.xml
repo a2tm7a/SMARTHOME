@@ -118,7 +118,7 @@
                 android:textSize="16sp"
                 android:layout_marginTop="56sp"
                 android:background="@drawable/rounded_corner"
-                android:textColor="#ffffffff"
+                android:textColor="#ffffff"
                 android:elevation="2sp"
 
                 />
