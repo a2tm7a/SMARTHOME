@@ -299,6 +299,7 @@ public class MainActivity extends AppCompatActivity
 
                 try {
                     spinner.setVisibility(View.VISIBLE);
+                    Thread.sleep(1000);
                     obj_datarequest.execute();
                 } catch (Exception e) {
                     e.printStackTrace();
