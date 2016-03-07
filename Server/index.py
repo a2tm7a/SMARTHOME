@@ -43,16 +43,14 @@ ser = serial.Serial(
 def greet(name='Stranger'):
         print 'hello'
         print os.path.dirname(os.path.abspath(__file__))
-        return static_file('index.html',
-        root="/home/pi/Desktop/SMARTHOME/html/ABOUT")
+        return static_file('index.html',root="/home/pi/Desktop/SMARTHOME/html/ABOUT")
 
 
 @get('/login')
 def login_page(name='Stranger'):
         print 'hello'
         print os.path.dirname(os.path.abspath(__file__))
-        return static_file('index.html',
-        root="/home/pi/Desktop/SMARTHOME/html/Login")
+        return static_file('index.html',root="/home/pi/Desktop/SMARTHOME/html/Login")
 
 
 @post('/login') # or @route('/login', method='POST')
