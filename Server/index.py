@@ -258,42 +258,10 @@ def toggle():
 def toggle():
         print "Hello Fan speed changed"
         status = request.forms.get('status')
-        status = int(status)
         Interface = request.forms.get('Interface')
-        print Interface
-        condition_fan="INSERT INTO Fan(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        print condition_fan
-	if(status==0):
-                        print "sending e"
-                        ser.write('e')
-                        #senddata('e')
-        elif(status==1):
-                        print "sneding f"
-                        #senddata('f')
-                        ser.write('f')
-        elif(status==2):
-                        print "sneding g"
-                        #senddata('g')
-                        ser.write('g')
-        elif(status==3):
-                        print "sneding h"
-                        #senddata('h')
-                        ser.write('h')
-        elif(status==4):
-                        print "sneding i"
-                        #senddata('i')
-                        ser.write('i')
-        elif(status==5):
-                        print "sneding j"
-                        #senddata('j')
-                        ser.write('j')
+        q=insertIntoFan(status,Interface)
+	print q
 
-	try:
-                cursor.execute(condition_fan)
-                db.commit()
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
         return request.forms.get('status')
 
 
@@ -346,17 +314,8 @@ def toggle():
 
 
 	fan_status=0
-	condition_fan="INSERT INTO Fan(Status,Interface,Time) VALUES('%d','%s',NOW())" % (fan_status, Interface)
-        print condition_fan
-	
-	ser.write('e')
-	
-	try:
-                cursor.execute(condition_fan)
-                db.commit()
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoFan(fan_status,Interface)
+	print q
 
 
 
@@ -774,7 +733,45 @@ def insertIntoLights2(status,Interface):
                 db.rollback()
 		return '0'
 
+def insertIntoFan(status,Interface):
+	
+	status = int(status)
+	print Interface
+        condition_fan="INSERT INTO Fan(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_fan
+	if(status==0):
+                        print "sending e"
+                        ser.write('e')
+                        #senddata('e')
+        elif(status==1):
+                        print "sneding f"
+                        #senddata('f')
+                        ser.write('f')
+        elif(status==2):
+                        print "sneding g"
+                        #senddata('g')
+                        ser.write('g')
+        elif(status==3):
+                        print "sneding h"
+                        #senddata('h')
+                        ser.write('h')
+        elif(status==4):
+                        print "sneding i"
+                        #senddata('i')
+                        ser.write('i')
+        elif(status==5):
+                        print "sneding j"
+                        #senddata('j')
+                        ser.write('j')
 
+	try:
+                cursor.execute(condition_fan)
+                db.commit()
+		return '1'
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
 
 def sendMessageGcm(registration_ids,message):
 	'''url="https://android.googleapis.com/gcm/send"
