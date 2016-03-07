@@ -227,31 +227,10 @@ def toggle():
 def toggle():
         print "Hello Security are toggle"
         status = request.forms.get('status')
-        status = int(status)
         Interface = request.forms.get('Interface')
-        print Interface
-        condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        print condition_security
-        
-        if(status==1):
-                        print "sending t"
-                        ser.write('t')
-                        #senddata('t')
-        elif(status==0):
-                        print "sneding s"
-                        #senddata('s')
-                        ser.write('s')
-                
-          
-        print condition_security
-        try:
-                cursor.execute(condition_security)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-        return request.forms.get('status')
+        q=insertIntoSecurity(status,Interface)
+	print q
+	return request.forms.get('status')
 
 
 @post('/fan_control')
@@ -270,24 +249,11 @@ def toggle():
 def toggle():
         print "Hello Curtains changed"
         status = request.forms.get('status')
-        status = int(status)
         Interface = request.forms.get('Interface')
-        print Interface
-        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        print condition_curtains
-
-	if(status==1):
-                ser.write('o')
-        elif(status==0):
-                ser.write('p')
-
-        try:
-                cursor.execute(condition_curtains)
-                db.commit()
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-        return request.forms.get('status')
+        q=insertIntoCurtain(status,Interface)
+	print q
+	
+	return request.forms.get('status')
 
 @post('/away_mode_control')
 def toggle():
@@ -299,40 +265,17 @@ def toggle():
 
 
 	curtain_status=0
-        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (curtain_status, Interface)
-        print condition_curtains
-
-        ser.write('p')
-
-        try:
-                cursor.execute(condition_curtains)
-                db.commit()
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+        q=insertIntoCurtain(curtain_status,Interface)
+	print q
 		
-
-
 	fan_status=0
 	q=insertIntoFan(fan_status,Interface)
 	print q
 
 
-
 	security_status=1
-	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (security_status, Interface)
-        print condition_security
-
-	ser.write('t')
-        #senddata('t')
-     
-        try:
-                cursor.execute(condition_security)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoSecurity(security_status,Interface)
+	print q
 
 	light_status1=0
 	q=insertIntoLights1(light_status1,Interface)
@@ -356,36 +299,13 @@ def toggle():
 
 
 	curtain_status=1
-        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (curtain_status, Interface)
-        print condition_curtains
-
-        ser.write('o')
-
-        try:
-                cursor.execute(condition_curtains)
-                db.commit()
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+        q=insertIntoCurtain(curtain_status,Interface)
+	print q
 		
 
-
-
 	security_status=0
-	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (security_status, Interface)
-        print condition_security
-
-	ser.write('s')
-        #senddata('s')
-     
-        try:
-                cursor.execute(condition_security)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-
+	q=insertIntoSecurity(security_status,Interface)
+	print q
 
 	light_status1=1
 	q=insertIntoLights1(light_status1,Interface)
@@ -409,39 +329,18 @@ def toggle():
 
 
 	curtain_status=0
-        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (curtain_status, Interface)
-        print condition_curtains
-
-        ser.write('p')
-
-        try:
-                cursor.execute(condition_curtains)
-                db.commit()
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-		
+        q=insertIntoCurtain(curtain_status,Interface)
+	print q
 
 
 	security_status=1
-	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (security_status, Interface)
-        print condition_security
-
-	ser.write('t')
-        #senddata('t')
-     
-        try:
-                cursor.execute(condition_security)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoSecurity(security_status,Interface)
+	print q
 
 	light_status1=0
 	q=insertIntoLights1(light_status1,Interface)
 	print q
-
+	
 
 	light_status2=0
 	q=insertIntoLights2(light_status2,Interface)
@@ -460,18 +359,9 @@ def toggle():
 
 
 	curtain_status=0
-        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (curtain_status, Interface)
-        print condition_curtains
+        q=insertIntoCurtain(curtain_status,Interface)
+	print q
 
-        ser.write('p')
-
-        try:
-                cursor.execute(condition_curtains)
-                db.commit()
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-		
 
 	light_status1=0
 	q=insertIntoLights1(light_status1,Interface)
@@ -772,6 +662,52 @@ def insertIntoFan(status,Interface):
                 print e.args[0],e.args[1]
                 db.rollback()
 		return '0'
+
+def insertIntoCurtain(status,Interface):
+	status = int(status)
+	print Interface
+        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_curtains
+
+	if(status==1):
+                ser.write('o')
+        elif(status==0):
+                ser.write('p')
+
+        try:
+                cursor.execute(condition_curtains)
+                db.commit()
+		return '1'
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+
+def insertIntoSecurity(status,Interface):
+	status = int(status)
+	print Interface
+        condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_security
+        
+        if(status==1):
+                        print "sending t"
+                        ser.write('t')
+                        #senddata('t')
+        elif(status==0):
+                        print "sneding s"
+                        #senddata('s')
+                        ser.write('s')
+                
+        try:
+                cursor.execute(condition_security)
+                db.commit()
+		return '1'
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+                
 
 def sendMessageGcm(registration_ids,message):
 	'''url="https://android.googleapis.com/gcm/send"
