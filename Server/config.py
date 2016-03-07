@@ -10,4 +10,5 @@ configs_user={
 }
 gcm_api={
 'GOOGLE_API_KEY': 'AIzaSyAmmvVIcRKEwTDksISaiDJjsdCznWoo-eA'
+
 }

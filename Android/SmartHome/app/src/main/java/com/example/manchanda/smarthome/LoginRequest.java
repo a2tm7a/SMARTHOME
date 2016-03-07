@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 
+import com.google.android.gcm.GCMRegistrar;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -27,6 +29,7 @@ import java.util.List;
 
 import static com.example.manchanda.smarthome.CommonUtilities.Code_LoginRequest;
 import static com.example.manchanda.smarthome.CommonUtilities.LOGIN_URL;
+import static com.example.manchanda.smarthome.CommonUtilities.PROJECT_ID;
 
 
 /**
@@ -134,6 +137,15 @@ public class LoginRequest extends AsyncTask<Void,Void,Void> {
                 Log.d("GCM ID", GCMRegistrar.getRegistrationId(context));
                 */
                 check_login_error = 0;
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                String isregistered = preferences.getString("registered","0");
+                Log.d(isregistered,"loginrequest");
+                if(!isregistered.equalsIgnoreCase("1"))
+                {
+                    GCMRegistrar.register(context, PROJECT_ID);
+
+                }
+
             }
             else
             {
@@ -172,11 +184,11 @@ public class LoginRequest extends AsyncTask<Void,Void,Void> {
         spinner.setVisibility(View.INVISIBLE);
         if(check_login_error!=0)
         {
-            listener.onResult(Code_LoginRequest,check_login_error,"Error");
+            listener.onResult(Code_LoginRequest,check_login_error,"Error","");
         }
         else
         {
-            listener.onResult(Code_LoginRequest,check_login_error,"Successful Login");
+            listener.onResult(Code_LoginRequest,check_login_error,"Successful Login","");
         }
 
     }

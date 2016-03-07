@@ -11,6 +11,7 @@ import requests
 import json
 from gcm import GCM
 import collections
+
 #import RPi.GPIO as GPIO
 
 #GPIO.setmode(GPIO.BCM)
@@ -35,6 +36,7 @@ ser = serial.Serial(
         bytesize=serial.EIGHTBITS,
         timeout=1
 )
+
 
 
 @route('/')
@@ -553,7 +555,6 @@ def toggle():
 		
 
 
-
 	security_status=1
 	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (security_status, Interface)
         print condition_security
@@ -840,6 +841,62 @@ def sendMessageGcm(message):
 		return "0"
 	print "returning 1"
 	return "1"
+
+
+@get('/test_gcm')
+def testingfunction():
+	
+	sendMessageGcm('asdasdqwe123123','hello')
+
+@post('/storeGcmUser')
+def storeGcmUser():
+	gcm_regId = request.forms.get('gcm_regId')
+	insert_data="INSERT INTO gcm_users(gcm_regid, created_at) VALUES('%s', NOW())" % (gcm_regId)
+	print insert_data
+	try:
+		cursor.execute(insert_data)
+		db.commit()
+		
+	except MySQLdb.Error, e:
+		print e.args[0],e.args[1]
+		db.rollback()
+	return "0"
+
+def sendMessageGcm(registration_ids,message):
+	'''url="https://android.googleapis.com/gcm/send"
+	headers = {'Authorization': 'key='+gcm["GOOGLE_API_KEY"],
+		'Content-Type':'application/json'}
+
+	payload = {'registration_ids': registration_ids, 'data': message}
+	r = requests.post(url, data, headers=headers)
+	print  json.dumps(payload)
+
+	print r'''
+	results=""
+	reg=""
+	gcm = GCM(gcm_api["GOOGLE_API_KEY"])
+	data = {'warning': message}
+	condition_gcm="SELECT gcm_regid FROM gcm_users"
+	try:
+		cursor.execute(condition_gcm)
+		results = cursor.fetchall()
+		#reg=results[0][0]
+		for reg in results:
+			reg=[reg[0]]
+			response = gcm.json_request(registration_ids=reg, data=data)
+			print response
+		reg
+		#print results
+	except:
+		print "error"
+
+	reg=[reg]
+	print reg
+
+	#regis=["APA91bHJsIRkKDGJQeJgOJAQ_YYHrS0GuB5fTHtuD-Ir0M5TjZbPIVUfKD7IRPB1VkyUjjGYLRxVcmO3tuPYZNsPfYOaGIg5zzWuCIvpgr7xGLVlzo4s2bSGPJ8y_wzSYVjjY6WjGfFqpN83Y2ftoOMEoW-SEdwbEw"]
+	#print regis
+	#response = gcm.json_request(registration_ids=reg, data=data)
+	#print response
 
 
 

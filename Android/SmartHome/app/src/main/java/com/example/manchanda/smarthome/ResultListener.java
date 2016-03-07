@@ -5,5 +5,5 @@ package com.example.manchanda.smarthome;
  */
 public interface ResultListener {
 
-    void onResult(int code, int check, String data);
+    void onResult(int code, int check, String data,String endpoint);
 }

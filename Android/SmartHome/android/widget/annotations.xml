@@ -1,0 +1,5 @@
+<root>
+  <item name='android.widget.ImageView android.graphics.drawable.Drawable getDrawable()'>
+    <annotation name='android.support.annotation.NonNull' />
+  </item>
+</root>
