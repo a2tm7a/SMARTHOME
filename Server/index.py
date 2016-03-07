@@ -194,82 +194,32 @@ def testing():
 def toggle():
         print "Hello Lights are toggle"
         status = request.forms.get('status')
-        status = int(status)
         Interface = request.forms.get('Interface')
-        print Interface
-        condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        print condition_light1
-        if(status==1):
-                ser.write('c')
-        elif(status==0):
-                ser.write('d')
-        try:
-                cursor.execute(condition_light1)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-
-	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        print condition_light2
-        if(status==1):
-                ser.write('1')
-        elif(status==0):
-                ser.write('2')
-        try:
-                cursor.execute(condition_light2)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-
+        
+	q=insertIntoLights1(status,Interface)
+	print q
 	
+	q=insertIntoLights2(status,Interface)
+	print q
+		
         return request.forms.get('status')
 
 @post('/lights_control1')
 def toggle():
         print "Hello Lights1 are toggle"
         status = request.forms.get('status')
-        status = int(status)
         Interface = request.forms.get('Interface')
-        print Interface
-        condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        print condition_light1
-        if(status==1):
-                ser.write('c')
-        elif(status==0):
-                ser.write('d')
-        try:
-                cursor.execute(condition_light1)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+        q=insertIntoLights1(status,Interface)
+	print q
         return request.forms.get('status')
 
 @post('/lights_control2')
 def toggle():
         print "Hello Lights2 are toggle"
         status = request.forms.get('status')
-        status = int(status)
         Interface = request.forms.get('Interface')
-        print Interface
-        condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        print condition_light2
-        if(status==1):
-                ser.write('1')
-        elif(status==0):
-                ser.write('2')
-        try:
-                cursor.execute(condition_light2)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoLights2(status,Interface)
+	print q
         return request.forms.get('status')
 
 
@@ -426,32 +376,13 @@ def toggle():
                 db.rollback()
 
 	light_status1=0
-	condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status1, Interface)
-        print condition_light1
-        ser.write('d')
-
-        try:
-                cursor.execute(condition_light1)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoLights1(light_status1,Interface)
+	print q
 
 
 	light_status2=0
-	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status2, Interface)
-        print condition_light2
-        ser.write('2')
-
-        try:
-                cursor.execute(condition_light2)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-
+	q=insertIntoLights2(light_status2,Interface)
+	print q
 
         return request.forms.get('status')
 
@@ -498,33 +429,13 @@ def toggle():
 
 
 	light_status1=1
-	condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status1, Interface)
-        print condition_light1
-        ser.write('c')
-
-        try:
-                cursor.execute(condition_light1)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoLights1(light_status1,Interface)
+	print q
 
 
 	light_status2=1
-	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status2, Interface)
-        print condition_light2
-        ser.write('1')
-
-        try:
-                cursor.execute(condition_light2)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-
-
+	q=insertIntoLights2(light_status2,Interface)
+	print q
 
         return request.forms.get('status')
 
@@ -569,31 +480,14 @@ def toggle():
                 db.rollback()
 
 	light_status1=0
-	condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status1, Interface)
-        print condition_light1
-        ser.write('d')
-
-        try:
-                cursor.execute(condition_light1)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoLights1(light_status1,Interface)
+	print q
 
 
 	light_status2=0
-	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status2, Interface)
-        print condition_light2
-        ser.write('2')
+	q=insertIntoLights2(light_status2,Interface)
+	print q
 
-        try:
-                cursor.execute(condition_light2)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
 
         return request.forms.get('status')
 
@@ -621,31 +515,13 @@ def toggle():
 		
 
 	light_status1=0
-	condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status1, Interface)
-        print condition_light1
-        ser.write('d')
-
-        try:
-                cursor.execute(condition_light1)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoLights1(light_status1,Interface)
+	print q
 
 
 	light_status2=0
-	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status2, Interface)
-        print condition_light2
-        ser.write('2')
-
-        try:
-                cursor.execute(condition_light2)
-                db.commit()
-
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
+	q=insertIntoLights2(light_status2,Interface)
+	print q
 
 
 
@@ -859,6 +735,46 @@ def storeGcmUser():
 		print e.args[0],e.args[1]
 		db.rollback()
 	return "0"
+
+def insertIntoLights1(status,Interface):
+	status = int(status)
+	print Interface
+        condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_light1
+        if(status==1):
+                ser.write('c')
+        elif(status==0):
+                ser.write('d')
+        try:
+                cursor.execute(condition_light1)
+                db.commit()
+		return '1'
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+
+def insertIntoLights2(status,Interface):
+	status = int(status)
+        print Interface
+        condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_light2
+        if(status==1):
+                ser.write('1')
+        elif(status==0):
+                ser.write('2')
+        try:
+                cursor.execute(condition_light2)
+                db.commit()
+		return '1'
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+
+
 
 def sendMessageGcm(registration_ids,message):
 	'''url="https://android.googleapis.com/gcm/send"
