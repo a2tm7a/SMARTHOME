@@ -11,7 +11,7 @@ html, body {
 	padding: 0px; 
 	margin: 0px; 
 	color: #333333;
-	background: #333333;
+	background: #9b4d2a;
 	font-size: 16px;
 }
 img	{ width: 100%; }
@@ -33,8 +33,8 @@ p {
 	color: #333333;
 }
 h1, h2, h3, h4, h5, h6 {
-	font-family: Tahoma, Arial;
-	font-weight: 400;
+	font-family: 'Roboto Condensed', sans-serif;
+	font-weight: 200;
 }
 h1	{	font-size: 3em;
 	color: #cccccc;
@@ -62,7 +62,10 @@ h3 {
 /* .container	{ position: absolute; } */
 
 .templatemo_link ,.templatemo_linkservice,.templatemo_linkcontact { 
-	font-size: 2em; color: #ffffff;
+	font-size: 1em; color: #ffffff;
+	font-style:italic;
+	font-family:'Roboto Condensed', serif;
+	word-wrap:break-word;
 	width: 95%;
 }
 

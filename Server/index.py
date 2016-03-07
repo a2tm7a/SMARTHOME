@@ -5,6 +5,12 @@ import staticFilesForAbout
 import staticFilesForLogin
 import staticFilesForApplication
 import MySQLdb
+import serial
+import time
+import requests
+import json
+from gcm import GCM
+import collections
 #import RPi.GPIO as GPIO
 
 #GPIO.setmode(GPIO.BCM)
@@ -21,213 +27,653 @@ import MySQLdb
 db = MySQLdb.connect(configs_db["host"],configs_db["user"],configs_db["password"],configs_db["database"])
 cursor = db.cursor()
 
+ser = serial.Serial(
+        port='/dev/ttyAMA0',
+        baudrate = 9600,
+        parity=serial.PARITY_NONE,
+        stopbits=serial.STOPBITS_ONE,
+        bytesize=serial.EIGHTBITS,
+        timeout=1
+)
 
 
 @route('/')
 def greet(name='Stranger'):
-	print 'hello'
-	print os.path.dirname(os.path.abspath(__file__))
-	return static_file('index.html', root="/home/manchanda/Projects/SMARTHOME/html/ABOUT")
+        print 'hello'
+        print os.path.dirname(os.path.abspath(__file__))
+        return static_file('index.html',
+        root="/home/pi/Desktop/SMARTHOME/html/ABOUT")
 
 
 @get('/login')
 def login_page(name='Stranger'):
-	print 'hello'
-	print os.path.dirname(os.path.abspath(__file__))
-	return static_file('index.html', root="/home/manchanda/Projects/SMARTHOME/html/Login")
+        print 'hello'
+        print os.path.dirname(os.path.abspath(__file__))
+        return static_file('index.html',
+        root="/home/pi/Desktop/SMARTHOME/html/Login")
 
 
 @post('/login') # or @route('/login', method='POST')
 def login():
-	username = request.forms.get('username')
-	password = request.forms.get('password')
-	if(username == configs_user['username'] and password == configs_user['password']):
-		condition_light="SELECT Status FROM Lights ORDER BY Time DESC LIMIT 1"
+        username = request.forms.get('username')
+        password = request.forms.get('password')
+	
+        if(username == configs_user['username'] and password == configs_user['password']):
+
+		condition_light1="SELECT Status FROM Lights1 ORDER BY Time DESC LIMIT 1"
+		condition_light2="SELECT Status FROM Lights2 ORDER BY Time DESC LIMIT 1"
+                
 		condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
-		condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
-		condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
-		condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
+                condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
+                condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
+                condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
+                condition_user="SELECT Name FROM Users WHERE ONLINE = 1 AND NAME IS NOT NULL ORDER BY Time DESC"
+		condition_sensor="SELECT Humidity, Temperature, Co2ppm FROM Sensor_Data ORDER BY Time DESC LIMIT 1"
+                
+		userobject_list = []
+		lights=""
+		automatic=""
+		curtains=""
+		security=""
+		fans=""
+		humidity=0.00
+		temperature=0.00
+		co2emission=0
 		try:
-			cursor.execute(condition_light)
-			results = cursor.fetchall()
-			print results[0][0]
-			light_status=results[0][0]
-
-			cursor.execute(condition_fan)
-			results = cursor.fetchall()
-			print results[0][0]
-			fan_status=results[0][0]
-
-			cursor.execute(condition_curtain)
-			results = cursor.fetchall()
-			print results[0][0]
-			curtain_status=results[0][0]
-
-			cursor.execute(condition_security)
-			results = cursor.fetchall()
-			print results[0][0]
-			security_status=results[0][0]
-
-
-			cursor.execute(condition_automaticmode)
-			results = cursor.fetchall()
-			print results[0][0]
-			automatic_status=results[0][0]
-
-
-			if(light_status == 0):
-				lights="bulb_off.png"
-			else:
-				lights="bulb_on.png"
-
-
-			if(automatic_status == 0):
-				automatic="unchecked"
-			else:
-				automatic="checked"
+                        cursor.execute(condition_light1)
+                        results = cursor.fetchall()
+                        print results[0][0]
+                        light_status1=results[0][0]
 			
+			cursor.execute(condition_light2)
+                        results = cursor.fetchall()
+                        print results[0][0]
+                        light_status2=results[0][0]
 
 			
-			if(curtain_status == 0):
-				curtains="CURTAINS_CLOSED.png"
-			else:
-				curtains="CURTAINS_OPEN.png"
-			
+                        cursor.execute(condition_fan)
+                        results = cursor.fetchall()
+                        print results[0][0]
+                        fan_status=results[0][0]
 
-			if(security_status == 0):
-				security="doorSecurityOff.png"
-			else:
-				security="doorSecurityOn.png"
+                        cursor.execute(condition_curtain)
+                        results = cursor.fetchall()
+                        print results[0][0]
+                        curtain_status=results[0][0]
 
-
-
-			if(fan_status == 0):
-				fans="FAN_speed0.png"
-			elif(fan_status == 1):
-				fans="FAN_speed1.png"
-			elif(fan_status == 2):
-				fans="FAN_speed2.png"
-			elif(fan_status == 3):
-				fans="FAN_speed3.png"	
-			elif(fan_status == 4):
-				fans="FAN_speed4.png"	
-			else:
-				fans="FAN_speed5.png"
+                        cursor.execute(condition_security)
+                        results = cursor.fetchall()
+                        print results[0][0]
+                        security_status=results[0][0]
 
 
-		except:
-			print "DB Error" 
-		
-		return template('/home/manchanda/Projects/SMARTHOME/html/Application/index.html',light=lights, fan=fans, curtain=curtains, security=security, automatic=automatic)
-	else:
-		return template("<p> Login unsuccessful {{name}} {{pass1}} </p>",name=username, pass1=password)
+                        cursor.execute(condition_automaticmode)
+                        results = cursor.fetchall()
+                        print results[0][0]
+                        automatic_status=results[0][0]
 
+			cursor.execute(condition_sensor)
+                        results = cursor.fetchall()
+                        print results[0][0],results[0][1],results[0][2]
+			humidity=results[0][0]
+			temperature=results[0][1]
+			co2emission=results[0][2]
+                        #light_status=results[0][0]
+
+			cursor.execute(condition_user)
+			results = cursor.fetchall()
+			#for reg in results:
+				#d=collections.OrderedDict()
+				#d['Name']=reg[2]
+				#d['LastSeen']=reg[4]
+				#userobject_list.append(d)
+			#json_userdata=json.dumps(userobject_list)
+			#print json_userdata
+			connected_users=results
+			#connected_users=json.dumps(connected_users, default=date_handler)
+			print results
+
+
+                        if(light_status1 == 0 and light_status2 == 0):
+                                lights="bulb_off.png"
+                        else:
+                                lights="bulb_on.png"
+
+
+                        if(automatic_status == 0):
+                                automatic="unchecked"
+                        else:
+                                automatic="checked"
+
+                        if(curtain_status == 0):
+                                curtains="CURTAINS_CLOSED.png"
+                        else:
+                                curtains="CURTAINS_OPEN.png"
+
+                        if(security_status == 0):
+                                security="doorSecurityOff.png"
+                        else:
+                                security="doorSecurityOn.png"
+
+
+
+                        if(fan_status == 0):
+                                fans="FAN_speed0.png"
+                        elif(fan_status == 1):
+                                fans="FAN_speed1.png"
+                        elif(fan_status == 2):
+                                fans="FAN_speed2.png"
+                        elif(fan_status == 3):
+                                fans="FAN_speed3.png"
+                        elif(fan_status == 4):
+                                fans="FAN_speed4.png"
+                        else:
+                                fans="FAN_speed5.png"
+
+
+                except MySQLdb.Error, e:
+                	print e.args[0],e.args[1]
+                	db.rollback()
+		print lights
+                return template('/home/pi/Desktop/SMARTHOME/html/Application/index.html',light=lights, fan=fans, curtain=curtains, security=security, automatic=automatic, connected_devices=connected_users,temperature=temperature,humidity=humidity,co2emission=co2emission)
+        else:
+                return template("<p> Login unsuccessful {{name}} {{pass1}} </p>",name=username, pass1=password)
+
+
+def date_handler(obj):
+    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
 @route('/test')
 def testing():
-	print "hee"
-	username=configs['username']+configs['password']
-	return 'Hey'+username
+        print "hee"
+        username=configs_user['username']+configs_user['password']
+        return 'Hey'+username
 
 
 @post('/lights_control')
 def toggle():
-	print "Hello Lights are toggle"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_light="INSERT INTO Lights(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_light
-	try:
-		cursor.execute(condition_light)
-		db.commit()
-		
+        print "Hello Lights are toggle"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+        condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_light1
+        if(status==1):
+                ser.write('c')
+        elif(status==0):
+                ser.write('d')
+        try:
+                cursor.execute(condition_light1)
+                db.commit()
 
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
-	return "toggle"
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_light2
+        if(status==1):
+                ser.write('1')
+        elif(status==0):
+                ser.write('2')
+        try:
+                cursor.execute(condition_light2)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+	
+        return request.forms.get('status')
+
+@post('/lights_control1')
+def toggle():
+        print "Hello Lights1 are toggle"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+        condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_light1
+        if(status==1):
+                ser.write('c')
+        elif(status==0):
+                ser.write('d')
+        try:
+                cursor.execute(condition_light1)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+        return request.forms.get('status')
+
+@post('/lights_control2')
+def toggle():
+        print "Hello Lights2 are toggle"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+        condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_light2
+        if(status==1):
+                ser.write('1')
+        elif(status==0):
+                ser.write('2')
+        try:
+                cursor.execute(condition_light2)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+        return request.forms.get('status')
 
 
 @post('/security_control')
 def toggle():
-	print "Hello Security are toggle"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_security
-	try:
-		cursor.execute(condition_security)
-		db.commit()
-		
+        print "Hello Security are toggle"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+        condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_security
+        
+        if(status==1):
+                        print "sending t"
+                        ser.write('t')
+                        #senddata('t')
+        elif(status==0):
+                        print "sneding s"
+                        #senddata('s')
+                        ser.write('s')
+                
+          
+        print condition_security
+        try:
+                cursor.execute(condition_security)
+                db.commit()
 
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
-	return "toggle"
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+        return request.forms.get('status')
 
 
 @post('/fan_control')
 def toggle():
-	print "Hello Fan speed changed"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_fan="INSERT INTO Fan(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_fan
+        print "Hello Fan speed changed"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+        condition_fan="INSERT INTO Fan(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_fan
+	if(status==0):
+                        print "sending e"
+                        ser.write('e')
+                        #senddata('e')
+        elif(status==1):
+                        print "sneding f"
+                        #senddata('f')
+                        ser.write('f')
+        elif(status==2):
+                        print "sneding g"
+                        #senddata('g')
+                        ser.write('g')
+        elif(status==3):
+                        print "sneding h"
+                        #senddata('h')
+                        ser.write('h')
+        elif(status==4):
+                        print "sneding i"
+                        #senddata('i')
+                        ser.write('i')
+        elif(status==5):
+                        print "sneding j"
+                        #senddata('j')
+                        ser.write('j')
+
 	try:
-		cursor.execute(condition_fan)
-		db.commit()
-		
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
-	return "Changed"
+                cursor.execute(condition_fan)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+        return request.forms.get('status')
 
 
 
 @post('/curtain_control')
 def toggle():
-	print "Hello Curtains changed"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_curtains
-	try:
-		cursor.execute(condition_curtains)
-		db.commit()
-		
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
-	return "Changed"
+        print "Hello Curtains changed"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_curtains
 
+	if(status==1):
+                ser.write('o')
+        elif(status==0):
+                ser.write('p')
+
+        try:
+                cursor.execute(condition_curtains)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+        return request.forms.get('status')
+
+@post('/away_mode_control')
+def toggle():
+        print "Hello Away Mode"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+
+
+	curtain_status=0
+        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (curtain_status, Interface)
+        print condition_curtains
+
+        ser.write('p')
+
+        try:
+                cursor.execute(condition_curtains)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		
+
+
+	fan_status=0
+	condition_fan="INSERT INTO Fan(Status,Interface,Time) VALUES('%d','%s',NOW())" % (fan_status, Interface)
+        print condition_fan
+	
+	ser.write('e')
+	
+	try:
+                cursor.execute(condition_fan)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+
+	security_status=1
+	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (security_status, Interface)
+        print condition_security
+
+	ser.write('t')
+        #senddata('t')
+     
+        try:
+                cursor.execute(condition_security)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+	light_status1=0
+	condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status1, Interface)
+        print condition_light1
+        ser.write('d')
+
+        try:
+                cursor.execute(condition_light1)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+	light_status2=0
+	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status2, Interface)
+        print condition_light2
+        ser.write('2')
+
+        try:
+                cursor.execute(condition_light2)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+        return request.forms.get('status')
+
+
+@post('/morning_mode_control')
+def toggle():
+        print "Hello Morning Mode"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+
+
+	curtain_status=1
+        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (curtain_status, Interface)
+        print condition_curtains
+
+        ser.write('o')
+
+        try:
+                cursor.execute(condition_curtains)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		
+
+
+
+	security_status=0
+	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (security_status, Interface)
+        print condition_security
+
+	ser.write('s')
+        #senddata('s')
+     
+        try:
+                cursor.execute(condition_security)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+	light_status1=1
+	condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status1, Interface)
+        print condition_light1
+        ser.write('c')
+
+        try:
+                cursor.execute(condition_light1)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+	light_status2=1
+	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status2, Interface)
+        print condition_light2
+        ser.write('1')
+
+        try:
+                cursor.execute(condition_light2)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+
+        return request.forms.get('status')
+
+
+@post('/sleep_mode_control')
+def toggle():
+        print "Hello Sleep Mode"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+
+
+	curtain_status=0
+        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (curtain_status, Interface)
+        print condition_curtains
+
+        ser.write('p')
+
+        try:
+                cursor.execute(condition_curtains)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		
+
+
+
+	security_status=1
+	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (security_status, Interface)
+        print condition_security
+
+	ser.write('t')
+        #senddata('t')
+     
+        try:
+                cursor.execute(condition_security)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+	light_status1=0
+	condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status1, Interface)
+        print condition_light1
+        ser.write('d')
+
+        try:
+                cursor.execute(condition_light1)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+	light_status2=0
+	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status2, Interface)
+        print condition_light2
+        ser.write('2')
+
+        try:
+                cursor.execute(condition_light2)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+        return request.forms.get('status')
+
+@post('/theater_mode_control')
+def toggle():
+        print "Hello theater Mode"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+
+
+	curtain_status=0
+        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (curtain_status, Interface)
+        print condition_curtains
+
+        ser.write('p')
+
+        try:
+                cursor.execute(condition_curtains)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		
+
+	light_status1=0
+	condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status1, Interface)
+        print condition_light1
+        ser.write('d')
+
+        try:
+                cursor.execute(condition_light1)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+	light_status2=0
+	condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (light_status2, Interface)
+        print condition_light2
+        ser.write('2')
+
+        try:
+                cursor.execute(condition_light2)
+                db.commit()
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+
+
+        return request.forms.get('status')
 
 
 @post('/automatic_control')
 def toggle():
-	print "Hello automatic_control changed"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_automaticmode="INSERT INTO AutomaticMode(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_automaticmode
-	try:
-		cursor.execute(condition_automaticmode)
-		db.commit()
-		
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
-	return "Changed"
-
+        print "Hello automatic_control changed"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+        condition_automaticmode="INSERT INTO AutomaticMode(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_automaticmode
+        try:
+                cursor.execute(condition_automaticmode)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+        if(status==1):
+                ser.write('b')
+	
+        elif(status==0):
+                ser.write('a')
+        return request.forms.get('status')
 
 
 
@@ -235,40 +681,167 @@ def toggle():
 
 @get('/logintest') # or @route('/login')
 def login():
-	return '''
-		<form action="/login" method="post">
-           	Username: <input name="username" type="text" />
-            	Password: <input name="password" type="password" />
-            	<input value="Login" type="submit" />
-        	</form>
-   		'''
+        return '''
+        <form action="/login" method="post">
+                    Username: <input name="username" type="text" />
+                    Password: <input name="password" type="password" />
+                    <input value="Login" type="submit" />
+                </form>
+            '''
 
 
 @post('/data') # or @route('/login', method='POST')
 def data():
-	data=getdata()
-	return data
+        condition_light1="SELECT Status FROM Lights1 ORDER BY Time DESC LIMIT 1"
+        condition_light2="SELECT Status FROM Lights2 ORDER BY Time DESC LIMIT 1"
+        
+	condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
+        condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
+        condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
+        condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
+        condition_sensor="SELECT Humidity, Temperature, Co2ppm FROM Sensor_Data ORDER BY Time DESC LIMIT 1"
+	condition_user="SELECT Name FROM Users WHERE ONLINE = 1 AND NAME IS NOT NULL ORDER BY Time DESC"
+		
+	humidity=0.00
+	temperature=0.00
+	co2emission=0            
+	data=""
+        try:
+		
+		cursor.execute(condition_sensor)
+                results = cursor.fetchall()
+                print results[0][0],results[0][1],results[0][2]
+		humidity=results[0][0]
+		temperature=results[0][1]
+		co2emission=results[0][2]
+
+		cursor.execute(condition_user)
+		results = cursor.fetchall()
+		#for reg in results:
+		#d=collections.OrderedDict()
+		#d['Name']=reg[2]
+		#d['LastSeen']=reg[4]
+		#userobject_list.append(d)
+		#json_userdata=json.dumps(userobject_list)
+		#print json_userdata
+		connected_users=results
+		#connected_users=json.dumps(connected_users, default=date_handler)
+		print results
+                
+
+		cursor.execute(condition_light1)
+                results = cursor.fetchall()
+                print results[0][0]
+                light_status1=results[0][0]
+
+		cursor.execute(condition_light2)
+                results = cursor.fetchall()
+                print results[0][0]
+                light_status2=results[0][0]
+
+                cursor.execute(condition_fan)
+                results = cursor.fetchall()
+                print results[0][0]
+                fan_status=results[0][0]
+
+                cursor.execute(condition_curtain)
+                results = cursor.fetchall()
+                print results[0][0]
+                curtain_status=results[0][0]
+
+                cursor.execute(condition_security)
+                results = cursor.fetchall()
+                print results[0][0]
+                security_status=results[0][0]
+
+
+                cursor.execute(condition_automaticmode)
+                results = cursor.fetchall()
+                print results[0][0]
+                automatic_status=results[0][0]
+
+                data={'lights1':light_status1,'lights2':light_status2, 'fan':fan_status,
+                'curtains':curtain_status, 'security':security_status,
+                'automatic':automatic_status,'temperature':temperature, 'humidity':humidity,'co2emission':co2emission,'connected_user':connected_users}
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+
+        return data
 
 @post('/logincheck') # or @route('/login', method='POST')
 def checklogin():
-	username = request.forms.get('username')
-	password = request.forms.get('password')
-	if(username == configs_user['username'] and password == configs_user['password']):
-		return "1"
+        username = request.forms.get('username')
+        password = request.forms.get('password')
+        if(username == configs_user['username'] and password == configs_user['password']):
+                return "1"
 
-	else:
-		return "0"
+        else:
+                return "0"
 
 
 
 def getdata():
-	return "Test data"
+        return "Test data"
 
 
 @post('/send_serialterminer')
 def senddata():
-	return null
+        return null
+
+@post('/sos')
+def testingfunction():
+	latitude = request.forms.get('latitude')
+	longitude = request.forms.get('longitude')
+	message="Amit needs help "+latitude+" ,"+longitude
+	sendMessageGcm(message)
+	print message
+
+@post('/test_gcm')
+def testingfunction():
+        message=request.forms.get('message')
+        sendMessageGcm('asdasdqwe123123',message)
+
+@post('/storeGcmUser')
+def storeGcmUser():
+        gcm_regId = request.forms.get('gcm_regId')
+        insert_data="INSERT INTO gcm_users(gcm_regid, created_at) VALUES('%s', NOW())" % (gcm_regId)
+        print insert_data
+        try:
+                cursor.execute(insert_data)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+        return "0"
+
+def sendMessageGcm(message):
+	results=""
+	reg=""
+	gcm = GCM(gcm_api["GOOGLE_API_KEY"])
+	print message
+	data = {'warning': message}
+	condition_gcm="SELECT gcm_regid FROM gcm_users"
+	try:
+		cursor.execute(condition_gcm)
+		results = cursor.fetchall()
+		print results
+		#reg=results[0][0]
+		for reg in results:
+			reg=[reg[0]]
+			response = gcm.json_request(registration_ids=reg, data=data)
+			print response
+			reg
+			#print results
+	except MySQLdb.Error, e:
+		print e.args[0],e.args[1]
+		db.rollback()
+		print "returning 0"
+		return "0"
+	print "returning 1"
+	return "1"
 
 
 
-run(host='localhost', port=8080, debug=True)
+
+run(host='192.168.0.100', port=9000, debug=True)

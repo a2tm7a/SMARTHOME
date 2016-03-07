@@ -1,6 +1,6 @@
 <!DOCTYPE html>
   <head>
-    <title>Matrix HTML5 Template</title>
+    <title>SLAMS IIT ROORKEE</title>
     <meta name="description" content="" />
     <meta name="author" content="templatemo">
     <meta charset="UTF-8">
@@ -19,7 +19,7 @@
     <link href="css/font-awesome/font-awesome.css" rel="stylesheet">
     <!--<link href="Application/css/base.css" rel="stylesheet">-->
     <link href="Application/css/style.css" rel="stylesheet">
-
+<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic,700,700italic,300italic,300' rel='stylesheet' type='text/css'>
         
 	<script src="Application/js/jquery-1.10.2.min.js"></script> 
 	<script src="Application/js/jquery.lightbox.js"></script>
@@ -49,7 +49,7 @@
     	<!-- logo start -->
     <div class="logocontainer">
     	<div class="row">
-        	<h1><a href="#">Matrix</a></h1>
+        	<h1><a href="#" style="font-style:italic; background-color:#9b4d2a">SLAMS</a></h1>
             
             <div class="switch" style="float:right; padding-top:5%">
             <input id="cmn-toggle-8" class="cmn-toggle cmn-toggle-yes-no" type="checkbox" {{automatic}} onchange='handleChange(this);'>
@@ -58,7 +58,7 @@
             
 
             <div class="clear"></div>
-            <div class="templatemo_smalltitle">Free HTML5 Template</div>
+            <div class="templatemo_smalltitle">Self Learning Automated Monitoring system</div>
        </div>
     </div>
     <!-- logo end -->    
@@ -68,7 +68,7 @@
   	<div class="container">
           	<div class="col-md-3 col-sm-6 templatemo_leftgap">
             	<div class="templatemo_mainservice templatemo_botgap">
-                	<div class="templatemo_link"><a class="show-2 templatemo_page2" href="#">Services</a></div>
+                	<div class="templatemo_link">Temperature : {{temperature}}</div>
                 	
                 </div>
                 <div class="templatemo_mainimg"><img id="Security_Image" src="Application/images/{{security}}" alt="home img 01" onclick="toggleSecurity()"></div>
@@ -76,13 +76,13 @@
             <div class="col-md-3 col-sm-6 templatemo_leftgap">
             	<div class="templatemo_mainimg templatemo_botgap templatemo_portfotopgap"><img id="Bulb_Image" src="Application/images/{{light}}" alt="home img 02" onclick="toggleBulb()"></div>
                 <div class="templatemo_mainportfolio">
-                      <div class="templatemo_link"><a class="show-3 templatemo_page3" href="#">Portfolio</a></div>
+                      <div class="templatemo_link">Humidity : {{humidity}}</div>
                 	                   
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 templatemo_leftgap">
             	<div class="templatemo_maintesti templatemo_botgap templatemo_topgap">
-                	<div class="templatemo_link"><a class="show-4 templatemo_page4" href="#">Testimonials</a></div>
+                	<div class="templatemo_link">CO<sub>2</sub> Level : {{co2emission}}</div>
                 </div>
                 <div class="templatemo_mainimg"><img id="Fan_Image" src="Application/images/{{fan}}" alt="home img 03" onclick="changeFan()"></div>
             </div>
@@ -90,12 +90,14 @@
             	<div class="templatemo_mainimg templatemo_botgap templatemo_topgap">
              	   <img id="Curtain_Image" src="Application/images/{{curtain}}" alt="home img 04" onclick="toggleCurtain()">
                 </div>
-                <div class="templatemo_mainabout templatemo_botgap">
-                	<div class="templatemo_link"><a class="show-5 templatemo_page5" href="#">About Us</a></div>
+                <div class="templatemo_mainabout templatemo_botgap" style="word-wrap: break-word-all;">
+                	<div class="templatemo_link" style="word-wrap: break-word-all">
+			{{connected_devices}}
+			</div>
                 </div>
-                <div class="templatemo_maincontact">
+                <!--<div class="templatemo_maincontact">
                 	<div class="templatemo_link"><a class="show-6 templatemo_page6" href="#">Contact</a></div>
-                </div>
+                </div> -->
             </div>
     </div>
     
@@ -232,7 +234,7 @@
                 	<div class="templatemo_col50 templatemo_rightgap_about">
                     	<div class="templatemo_graybg templatemo_botgap">
                          <div class="templatemo_frame">
-                    	<h2>Testimonials</h2>
+                    	<h2>CO<sub>2</sub> Level : {{co2emission}}</h2>
                     	<p>Aliquam accumsan, mauris ut hendrerit vehicula, elit massa facilisis nulla, ut auctor risus massa non elit. Vestibulum commodo, mauris quis accumsan pretium, mauris erat porttitor nibh, a eleifend ante elit eu velit. Sed molestie fringilla tellus ut venenatis. Nam ut eros augue. Nullam scelerisque enim eget ornare rutrum. Proin dignissim eget arcu a posuere. Sed ut lacinia enim, et adipiscing purus.<br><br>
 						Etiam vitae elit euismod dui <a href="#">elementum</a> dapibus sed eleifend purus. Maecenas eleifend arcu arcu, vitae interdum erat sollicitudin vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
                         </div>
@@ -394,11 +396,7 @@
     </div>
     
     	<!-- logo start -->
-    <div class="logocontainer">
-    	<div class="row">
-            <div class="templatemo_footer">Copyright © 2084 Company Name</div>
-       </div>
-    </div>
+    
     <!-- logo end -->  
    <script type="text/javascript">
     function toggleBulb() {

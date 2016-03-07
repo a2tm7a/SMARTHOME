@@ -180,13 +180,16 @@ input.cmn-toggle-yes-no + label:before, input.cmn-toggle-yes-no + label:after {
   bottom: 0;
   right: 0;
   color: #fff;
-  font-family: "Roboto Slab", serif;
-  font-size: 20px;
+  font-weight:150;
+  font-family: "Roboto Condensed", serif;
+  font-size: 22px;
   text-align: center;
   line-height: 60px;
+  text-shadow: 1px 1px #3f3f3f;
+  border-radius: 6px;
 }
 input.cmn-toggle-yes-no + label:before {
-  background-color: #dddddd;
+  background-color: #e09224;
   content: attr(data-off);
   -webkit-transition: -webkit-transform 0.5s;
   -moz-transition: -moz-transform 0.5s;
@@ -199,7 +202,7 @@ input.cmn-toggle-yes-no + label:before {
   backface-visibility: hidden;
 }
 input.cmn-toggle-yes-no + label:after {
-  background-color: #8ce196;
+  background-color: #334d66;
   content: attr(data-on);
   -webkit-transition: -webkit-transform 0.5s;
   -moz-transition: -moz-transform 0.5s;

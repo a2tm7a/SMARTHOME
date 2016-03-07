@@ -60,7 +60,7 @@
  }
  
  header {
-	 background: #334d66;
+	 background: #2b84b6;
  }
  
  footer {
@@ -106,7 +106,10 @@
 
 /* #Links
 ================================================== */
-	a, a:visited { color: #fff; text-decoration: none; outline: 0; }
+	a, a:visited { color: #fff; 
+		text-decoration: none; 
+		outline: 0;
+		transition: all 0.2s ease-in 0s; }
 	a:hover, a:focus { color: #4d6287; }
 	p a, p a:visited { line-height: inherit; }
 
