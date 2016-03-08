@@ -101,51 +101,44 @@ def login():
 		
 		results=selectFromUsers()
 		connected_users=results
-		print connected_users
-		try:
-
+		print connected_users	
 			
-			
-                        if(light_status1 == 0 and light_status2 == 0):
-                                lights="bulb_off.png"
-                        else:
-                                lights="bulb_on.png"
+                if(light_status1 == 0 and light_status2 == 0):
+                	lights="bulb_off.png"
+                else:
+                        lights="bulb_on.png"
 
 
-                        if(automatic_status == 0):
-                                automatic="unchecked"
-                        else:
-                                automatic="checked"
+                if(automatic_status == 0):
+                        automatic="unchecked"
+                else:
+                        automatic="checked"
 
-                        if(curtain_status == 0):
-                                curtains="CURTAINS_CLOSED.png"
-                        else:
-                                curtains="CURTAINS_OPEN.png"
+                if(curtain_status == 0):
+                        curtains="CURTAINS_CLOSED.png"
+                else:
+                        curtains="CURTAINS_OPEN.png"
 
-                        if(security_status == 0):
-                                security="doorSecurityOff.png"
-                        else:
-                                security="doorSecurityOn.png"
-
-
-
-                        if(fan_status == 0):
-                                fans="FAN_speed0.png"
-                        elif(fan_status == 1):
-                                fans="FAN_speed1.png"
-                        elif(fan_status == 2):
-                                fans="FAN_speed2.png"
-                        elif(fan_status == 3):
-                                fans="FAN_speed3.png"
-                        elif(fan_status == 4):
-                                fans="FAN_speed4.png"
-                        else:
-                                fans="FAN_speed5.png"
+                if(security_status == 0):
+                        security="doorSecurityOff.png"
+                else:
+                        security="doorSecurityOn.png"
 
 
-                except MySQLdb.Error, e:
-                	print e.args[0],e.args[1]
-                	db.rollback()
+
+                if(fan_status == 0):
+                        fans="FAN_speed0.png"
+                elif(fan_status == 1):
+                        fans="FAN_speed1.png"
+                elif(fan_status == 2):
+                        fans="FAN_speed2.png"
+                elif(fan_status == 3):
+                        fans="FAN_speed3.png"
+                elif(fan_status == 4):
+                        fans="FAN_speed4.png"
+                else:
+                        fans="FAN_speed5.png"
+
 		print lights
                 return template('/home/pi/Desktop/SMARTHOME/html/Application/index.html',light=lights, fan=fans, curtain=curtains, security=security, automatic=automatic, connected_devices=connected_users,temperature=temperature,humidity=humidity,co2emission=co2emission)
         else:
