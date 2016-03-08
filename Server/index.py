@@ -331,22 +331,11 @@ def toggle():
 def toggle():
         print "Hello automatic_control changed"
         status = request.forms.get('status')
-        status = int(status)
         Interface = request.forms.get('Interface')
-        print Interface
-        condition_automaticmode="INSERT INTO AutomaticMode(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-        print condition_automaticmode
-        try:
-                cursor.execute(condition_automaticmode)
-                db.commit()
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-        if(status==1):
-                ser.write('b')
 	
-        elif(status==0):
-                ser.write('a')
+	q=insertIntoAutomaticMode(status,Interface)
+	print q	
+
         return request.forms.get('status')
 
 
@@ -658,6 +647,26 @@ def insertIntoSecurity(status,Interface):
                 db.rollback()
 		return '0'
                 
+def insertIntoAutomaticMode(status,Interface):
+	status = int(status)
+        print Interface
+        condition_automaticmode="INSERT INTO AutomaticMode(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_automaticmode
+	
+	if(status==1):
+                ser.write('b')
+
+        elif(status==0):
+                ser.write('a')
+
+        try:
+                cursor.execute(condition_automaticmode)
+                db.commit()
+		return '1'
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
 
 def selectFromLights1():
 	condition_light1="SELECT Status FROM Lights1 ORDER BY Time DESC LIMIT 1"
