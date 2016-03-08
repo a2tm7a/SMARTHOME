@@ -355,81 +355,50 @@ def login():
 
 @post('/data') # or @route('/login', method='POST')
 def data():
-        condition_light1="SELECT Status FROM Lights1 ORDER BY Time DESC LIMIT 1"
-        condition_light2="SELECT Status FROM Lights2 ORDER BY Time DESC LIMIT 1"
-        
-	condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
-        condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
-        condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
-        condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
-        condition_sensor="SELECT Humidity, Temperature, Co2ppm FROM Sensor_Data ORDER BY Time DESC LIMIT 1"
-	condition_user="SELECT Name FROM Users WHERE ONLINE = 1 AND NAME IS NOT NULL ORDER BY Time DESC"
-		
+        print "Mobile end point for data"
+	
 	humidity=0.00
 	temperature=0.00
 	co2emission=0            
 	data=""
-        try:
-		
-		cursor.execute(condition_sensor)
-                results = cursor.fetchall()
-                print results[0][0],results[0][1],results[0][2]
-		humidity=results[0][0]
-		temperature=results[0][1]
-		co2emission=results[0][2]
 
-		cursor.execute(condition_user)
-		results = cursor.fetchall()
-		#for reg in results:
-		#d=collections.OrderedDict()
-		#d['Name']=reg[2]
-		#d['LastSeen']=reg[4]
-		#userobject_list.append(d)
-		#json_userdata=json.dumps(userobject_list)
-		#print json_userdata
-		connected_users=results
-		#connected_users=json.dumps(connected_users, default=date_handler)
-		print results
-                
+				
+	results=selectFromLights1()
+        light_status1=results[0][0]
+        print light_status1
 
-		cursor.execute(condition_light1)
-                results = cursor.fetchall()
-                print results[0][0]
-                light_status1=results[0][0]
+        results=selectFromLights2()
+        light_status2=results[0][0]
+        print light_status2
 
-		cursor.execute(condition_light2)
-                results = cursor.fetchall()
-                print results[0][0]
-                light_status2=results[0][0]
+        results=selectFromFan()
+        fan_status=results[0][0]
+        print fan_status
 
-                cursor.execute(condition_fan)
-                results = cursor.fetchall()
-                print results[0][0]
-                fan_status=results[0][0]
+        results=selectFromCurtain()
+        curtain_status=results[0][0]
+        print curtain_status
 
-                cursor.execute(condition_curtain)
-                results = cursor.fetchall()
-                print results[0][0]
-                curtain_status=results[0][0]
+        results=selectFromSecurity()
+        security_status=results[0][0]
+        print security_status
 
-                cursor.execute(condition_security)
-                results = cursor.fetchall()
-                print results[0][0]
-                security_status=results[0][0]
+        results=selectFromAutomaticMode()
+        automatic_status=results[0][0]
+        print automatic_status
 
+        results=selectFromSensorData()
+        print results[0][0],results[0][1],results[0][2]
+        humidity=results[0][0]
+        temperature=results[0][1]
+        co2emission=results[0][2]
 
-                cursor.execute(condition_automaticmode)
-                results = cursor.fetchall()
-                print results[0][0]
-                automatic_status=results[0][0]
+        results=selectFromUsers()
+        connected_users=results
+        print connected_users
 
-                data={'lights1':light_status1,'lights2':light_status2, 'fan':fan_status,
-                'curtains':curtain_status, 'security':security_status,
-                'automatic':automatic_status,'temperature':temperature, 'humidity':humidity,'co2emission':co2emission,'connected_user':connected_users}
-        except MySQLdb.Error, e:
-                print e.args[0],e.args[1]
-                db.rollback()
-
+        data={'lights1':light_status1,'lights2':light_status2, 'fan':fan_status,'curtains':curtain_status, 'security':security_status,'automatic':automatic_status,'temperature':temperature, 'humidity':humidity,'co2emission':co2emission,'connected_user':connected_users}
+        
         return data
 
 @post('/logincheck') # or @route('/login', method='POST')
