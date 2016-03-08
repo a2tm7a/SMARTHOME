@@ -12,18 +12,6 @@ import json
 from gcm import GCM
 import collections
 
-#import RPi.GPIO as GPIO
-
-#GPIO.setmode(GPIO.BCM)
-
-#GPIO.setup(14,GPIO.OUT)
-#GPIO.setup(15,GPIO.IN)
-#GPIO.setup(18,GPIO.OUT)
-#GPIO.setup(7,GPIO.OUT)
-#GPIO.setup(25,GPIO.OUT)
-
-#ser=serial.Serial('/dev/ttyAMA0' , 9600)
-#ser.open()
 
 db = MySQLdb.connect(configs_db["host"],configs_db["user"],configs_db["password"],configs_db["database"])
 cursor = db.cursor()
@@ -65,9 +53,6 @@ def login():
 		curtains=""
 		security=""
 		fans=""
-		humidity=0.00
-		temperature=0.00
-		co2emission=0
 		
 		results=selectFromLights1()
 		light_status1=results[0][0]
