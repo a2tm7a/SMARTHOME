@@ -535,7 +535,15 @@ def insertIntoFan(status,Interface):
 	
 	status = int(status)
 	print Interface
-        condition_fan="INSERT INTO Fan(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+	
+	results=selectFromSensorData()
+	humidity=results[0][0]
+	temperature=results[0][1]
+	
+	humidity=float(humidity)
+	temperature=float(temperature)
+	
+        condition_fan="INSERT INTO Fan(Status,Interface,Humidity,Temperature,Time) VALUES('%d','%s','%.2f',%.2f,NOW())" % (status, Interface,humidity,temperature)
         print condition_fan
 	if(status==0):
                         print "sending e"
