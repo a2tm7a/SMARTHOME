@@ -60,17 +60,6 @@ def login():
 	
         if(username == configs_user['username'] and password == configs_user['password']):
 
-		condition_light1="SELECT Status FROM Lights1 ORDER BY Time DESC LIMIT 1"
-		condition_light2="SELECT Status FROM Lights2 ORDER BY Time DESC LIMIT 1"
-                
-		condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
-                condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
-                condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
-                condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
-                condition_user="SELECT Name FROM Users WHERE ONLINE = 1 AND NAME IS NOT NULL ORDER BY Time DESC"
-		condition_sensor="SELECT Humidity, Temperature, Co2ppm FROM Sensor_Data ORDER BY Time DESC LIMIT 1"
-                
-		userobject_list = []
 		lights=""
 		automatic=""
 		curtains=""
@@ -79,61 +68,44 @@ def login():
 		humidity=0.00
 		temperature=0.00
 		co2emission=0
+		
+		results=selectFromLights1()
+		light_status1=results[0][0]
+		print light_status1
+		
+		results=selectFromLights2()
+		light_status2=results[0][0]
+		print light_status2
+		
+		results=selectFromFan()
+		fan_status=results[0][0]
+		print fan_status
+		
+		results=selectFromCurtain()
+		curtain_status=results[0][0]
+		print curtain_status
+
+		results=selectFromSecurity()
+		security_status=results[0][0]
+		print security_status
+
+		results=selectFromAutomaticMode()
+		automatic_status=results[0][0]
+		print automatic_status
+
+		results=selectFromSensorData()
+		print results[0][0],results[0][1],results[0][2]
+               	humidity=results[0][0]
+                temperature=results[0][1]
+               	co2emission=results[0][2]
+		
+		results=selectFromUsers()
+		connected_users=results
+		print connected_users
 		try:
-                        cursor.execute(condition_light1)
-                        results = cursor.fetchall()
-                        print results[0][0]
-                        light_status1=results[0][0]
-			
-			cursor.execute(condition_light2)
-                        results = cursor.fetchall()
-                        print results[0][0]
-                        light_status2=results[0][0]
 
 			
-                        cursor.execute(condition_fan)
-                        results = cursor.fetchall()
-                        print results[0][0]
-                        fan_status=results[0][0]
-
-                        cursor.execute(condition_curtain)
-                        results = cursor.fetchall()
-                        print results[0][0]
-                        curtain_status=results[0][0]
-
-                        cursor.execute(condition_security)
-                        results = cursor.fetchall()
-                        print results[0][0]
-                        security_status=results[0][0]
-
-
-                        cursor.execute(condition_automaticmode)
-                        results = cursor.fetchall()
-                        print results[0][0]
-                        automatic_status=results[0][0]
-
-			cursor.execute(condition_sensor)
-                        results = cursor.fetchall()
-                        print results[0][0],results[0][1],results[0][2]
-			humidity=results[0][0]
-			temperature=results[0][1]
-			co2emission=results[0][2]
-                        #light_status=results[0][0]
-
-			cursor.execute(condition_user)
-			results = cursor.fetchall()
-			#for reg in results:
-				#d=collections.OrderedDict()
-				#d['Name']=reg[2]
-				#d['LastSeen']=reg[4]
-				#userobject_list.append(d)
-			#json_userdata=json.dumps(userobject_list)
-			#print json_userdata
-			connected_users=results
-			#connected_users=json.dumps(connected_users, default=date_handler)
-			print results
-
-
+			
                         if(light_status1 == 0 and light_status2 == 0):
                                 lights="bulb_off.png"
                         else:
@@ -708,6 +680,116 @@ def insertIntoSecurity(status,Interface):
                 db.rollback()
 		return '0'
                 
+
+def selectFromLights1():
+	condition_light1="SELECT Status FROM Lights1 ORDER BY Time DESC LIMIT 1"
+	try:
+		cursor.execute(condition_light1)
+		results = cursor.fetchall()
+		return results
+	
+	except MySQLdb.Error, e:
+		print e.args[0],e.args[1]
+		db.rollback()
+		return 0
+
+def selectFromLights2():
+        condition_light2="SELECT Status FROM Lights2 ORDER BY Time DESC LIMIT 1"
+        try:
+                cursor.execute(condition_light2)
+                results = cursor.fetchall()
+                return results
+
+	except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromFan():
+        condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
+
+        try:
+		cursor.execute(condition_fan)
+		results = cursor.fetchall()
+		return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromCurtain():
+       
+	condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
+        try:
+                cursor.execute(condition_curtain)
+                results = cursor.fetchall()
+                return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromSecurity():
+
+        condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
+
+        try:
+                cursor.execute(condition_security)
+                results = cursor.fetchall()
+                return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+                     
+def selectFromAutomaticMode():
+
+        condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
+
+        try:
+                cursor.execute(condition_automaticmode)
+                results = cursor.fetchall()
+                print results
+		return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromSensorData():
+
+        condition_sensor="SELECT Humidity, Temperature, Co2ppm FROM Sensor_Data ORDER BY Time DESC LIMIT 1"
+
+
+        try:
+                cursor.execute(condition_sensor)
+                results = cursor.fetchall()
+                return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromUsers():
+
+        condition_user="SELECT Name FROM Users WHERE ONLINE = 1 AND NAME IS NOT NULL ORDER BY Time DESC"
+
+
+        try:
+                cursor.execute(condition_user)
+                results = cursor.fetchall()
+                return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
 
 def sendMessageGcm(registration_ids,message):
 	'''url="https://android.googleapis.com/gcm/send"
