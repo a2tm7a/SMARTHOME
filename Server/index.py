@@ -11,7 +11,7 @@ import requests
 import json
 from gcm import GCM
 import collections
-from saveDB import saveFromFanDB
+from saveDB import saveFromFanDB, saveFromSensorDB
 from prediction import predictSpeed
 
 db = MySQLdb.connect(configs_db["host"],configs_db["user"],configs_db["password"],configs_db["database"])
@@ -45,8 +45,11 @@ def login_page(name='Stranger'):
 def login_page():
         print "Welcome to Automated Fan"
 	saveFromFanDB()
+
+	saveFromSensorDB()
 	
 	speed = predictSpeed()
+
 	#speed=float(speed)
 	status_float=0.0
 	status_float=float(speed)
