@@ -56,9 +56,10 @@ def login_page():
 	#status=int(status_float)
 	q=insertIntoFan(int(status_float),"Android App")
         print q
+	
+	status_string=str(int(status_float))
 
-
-	return int(status_float)
+	return status_string
         
 
 @post('/login') # or @route('/login', method='POST')
