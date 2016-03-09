@@ -11,7 +11,8 @@ import requests
 import json
 from gcm import GCM
 import collections
-
+from saveDB import saveFromFanDB
+from prediction import predictSpeed
 
 db = MySQLdb.connect(configs_db["host"],configs_db["user"],configs_db["password"],configs_db["database"])
 cursor = db.cursor()
@@ -40,6 +41,25 @@ def login_page(name='Stranger'):
         print os.path.dirname(os.path.abspath(__file__))
         return static_file('index.html',root="/home/pi/Desktop/SMARTHOME/html/Login")
 
+@get('/automatedFan')
+def login_page():
+        print "Welcome to Automated Fan"
+	saveFromFanDB()
+	
+	speed = predictSpeed()
+	#speed=float(speed)
+	status_float=0.0
+	status_float=float(speed)
+	print type(status_float)
+	status=0
+	print type(status)
+	#status=int(status_float)
+	q=insertIntoFan(int(status_float),"Android App")
+        print q
+
+
+	return int(status_float)
+        
 
 @post('/login') # or @route('/login', method='POST')
 def login():
