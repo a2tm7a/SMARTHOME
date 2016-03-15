@@ -41,7 +41,7 @@ def login_page(name='Stranger'):
         print os.path.dirname(os.path.abspath(__file__))
         return static_file('index.html',root="/home/pi/Desktop/SMARTHOME/html/Login")
 
-@get('/automatedFan')
+@post('/automatedFan')
 def login_page():
         print "Welcome to Automated Fan"
 	saveFromFanDB()
@@ -163,6 +163,57 @@ def testing():
         username=configs_user['username']+configs_user['password']
         return 'Hey'+username
 
+@get('/watchLights')
+def toggleLights():
+	result=selectFromLights1()
+	lights1=result[0][0]
+	print lights1
+	
+	result=selectFromLights2()
+	lights2=result[0][0]
+	print lights2
+	
+	if(lights1 == 0 and lights2 == 0):
+        	q=insertIntoLights1("1","Watch")
+		print q
+		
+		q=insertIntoLights2("1","Watch")
+                print q
+
+        else:
+                q=insertIntoLights2("0","Watch")
+		print q
+
+		q=insertIntoLights1("0","Watch")
+                print q
+
+@get('/watchFan')
+def toggleLights():
+        result=selectFromFan()
+        fan=result[0][0]
+        print fan
+
+        if(fan==0):
+                q=insertIntoFan("5","Watch")
+                print q
+
+        else:
+                q=insertIntoFan("0","Watch")
+                print q
+
+@get('/watchSecurity')
+def toggleLights():
+        result=selectFromSecurity()
+        security=result[0][0]
+        print security
+
+        if(security==0):
+                q=insertIntoSecurity("1","Watch")
+                print q
+
+        else:
+                q=insertIntoSecurity("0","Watch")
+                print q
 
 @post('/lights_control')
 def toggle():
@@ -446,7 +497,7 @@ def senddata():
         return null
 
 @post('/sos')
-def testingfunction():
+def helpFunction():
 	latitude = request.forms.get('latitude')
 	longitude = request.forms.get('longitude')
 	message="Amit needs help "+latitude+" ,"+longitude
@@ -456,7 +507,7 @@ def testingfunction():
 @post('/test_gcm')
 def testingfunction():
         message=request.forms.get('message')
-        sendMessageGcm('asdasdqwe123123',message)
+        sendMessageGcmtest('asdasdqwe123123',message)
 
 @post('/storeGcmUser')
 def storeGcmUser():
@@ -524,8 +575,10 @@ def insertIntoLights1(status,Interface):
         print condition_light1
         if(status==1):
                 ser.write('c')
+		ser.write('e')
         elif(status==0):
                 ser.write('d')
+		ser.write('f')
         try:
                 cursor.execute(condition_light1)
                 db.commit()
@@ -542,9 +595,11 @@ def insertIntoLights2(status,Interface):
         condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
         print condition_light2
         if(status==1):
-                ser.write('1')
+                ser.write('g')
+		ser.write('i')
         elif(status==0):
-                ser.write('2')
+                ser.write('h')
+		ser.write('j')
         try:
                 cursor.execute(condition_light2)
                 db.commit()
@@ -571,28 +626,28 @@ def insertIntoFan(status,Interface):
         print condition_fan
 	if(status==0):
                         print "sending e"
-                        ser.write('e')
-                        #senddata('e')
+                        ser.write('l')
+                        #senddata('l')
         elif(status==1):
-                        print "sneding f"
-                        #senddata('f')
-                        ser.write('f')
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
         elif(status==2):
-                        print "sneding g"
-                        #senddata('g')
-                        ser.write('g')
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
         elif(status==3):
-                        print "sneding h"
-                        #senddata('h')
-                        ser.write('h')
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
         elif(status==4):
-                        print "sneding i"
-                        #senddata('i')
-                        ser.write('i')
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
         elif(status==5):
-                        print "sneding j"
-                        #senddata('j')
-                        ser.write('j')
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
 
 	try:
                 cursor.execute(condition_fan)
@@ -779,7 +834,7 @@ def selectFromUsers():
                 return 0
 
 
-def sendMessageGcm(registration_ids,message):
+def sendMessageGcmtest(registration_ids,message):
 	'''url="https://android.googleapis.com/gcm/send"
 	headers = {'Authorization': 'key='+gcm["GOOGLE_API_KEY"],
 		'Content-Type':'application/json'}
@@ -818,4 +873,4 @@ def sendMessageGcm(registration_ids,message):
 
 
 
-run(host='192.168.0.100', port=9000, debug=True)
+run(host='192.168.0.162', port=9000, debug=True)
