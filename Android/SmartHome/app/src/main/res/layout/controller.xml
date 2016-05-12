@@ -14,7 +14,7 @@
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <android.support.design.widget.NavigationView
+   <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -23,47 +23,118 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
-        <LinearLayout
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="125px"
             >
-
-        <Switch
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Auto Mode"
-            android:id="@+id/switch_auto_mode"
-            android:layout_gravity="right"
-            android:checked="false"
-             />
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AutomatedFan"
+                android:id="@+id/automatedFan"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                />
+
+
+
+            <Switch
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Auto Mode"
+                android:id="@+id/switch_auto_mode"
+                android:layout_gravity="right"
+                android:checked="false"
+                android:layout_weight="1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+
+
+
+        </RelativeLayout>
+
+
 
        <LinearLayout
-           android:layout_width="wrap_content"
+           android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:orientation="horizontal"
            android:weightSum="3">
-            <ImageButton
-                android:layout_width="145dp"
-                android:layout_height="145dp"
-                android:id="@+id/image_bulb"
-                android:scaleType="fitCenter"
-                android:src="@drawable/bulb_off_android"
-                android:layout_gravity="left"
-                android:layout_weight="1"
-                />
 
-            <ImageButton
-                android:layout_width="145dp"
-                android:layout_height="145dp"
-                android:src="@drawable/curtains_closedandroid"
-                android:id="@+id/image_curtains"
-                android:scaleType="fitCenter"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                />
+           <LinearLayout
+               android:layout_width="130dp"
+               android:layout_height="145dp"
+               android:weightSum="2"
+               android:layout_weight="1">
+               <ImageButton
+                   android:layout_width="145dp"
+                   android:layout_height="145dp"
+                   android:id="@+id/image_bulb1"
+                   android:scaleType="fitCenter"
+                   android:src="@drawable/bulbandroidlefton"
+                   android:layout_gravity="left"
+                   android:layout_weight="1"
+                   android:layout_marginRight="-4.5dp"
+                   android:paddingRight="4.22dp" />
+               <ImageButton
+                   android:layout_width="145dp"
+                   android:layout_height="145dp"
+                   android:id="@+id/image_bulb2"
+                   android:scaleType="fitCenter"
+                   android:src="@drawable/bulbandroirighton"
+                   android:layout_gravity="left"
+                   android:layout_weight="1"
+                   android:layout_marginLeft="-4.5dp"
+                   android:layout_marginRight="-4.5dp"
+                   android:paddingLeft="4.22dp" />
+           </LinearLayout>
+
            <ImageButton
+               android:layout_width="145dp"
+               android:layout_height="145dp"
+               android:id="@+id/away_mode"
+               android:scaleType="fitCenter"
+               android:layout_gravity="center"
+               android:layout_weight="1"
+               android:src="@drawable/awaymodeandroid"/>
+
+
+
+           <LinearLayout
+               android:layout_width="150dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:layout_gravity="center_vertical"
+               android:orientation="vertical">
+               <TextView
+                   android:layout_width="150dp"
+                   android:layout_height="wrap_content"
+                   android:text="Fan Speed"
+                   android:id="@+id/fanSpeed"
+                   android:layout_weight="1"
+                   android:gravity="center"
+                   android:layout_marginBottom="20dp"
+                   android:layout_marginLeft="-12dp"/>
+               <SeekBar
+                   android:layout_width="150dp"
+                   android:layout_height="wrap_content"
+                   android:id="@+id/seekBarFan"
+                   android:max="5"
+                   android:layout_marginLeft="-12dp" />
+           </LinearLayout>
+
+           <!--<ImageButton
                android:layout_width="145dp"
                android:layout_height="145dp"
                android:src="@drawable/fan_speedandroid0"
@@ -71,13 +142,37 @@
                android:scaleType="fitCenter"
                android:layout_gravity="right"
                android:layout_weight="1"
-               />
+               />-->
 
        </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+                <ImageButton
+                    android:layout_width="145dp"
+                    android:layout_height="145dp"
+                    android:id="@+id/morning_mode"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/morningmodeandroid"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"/>
+                <ImageButton
+                    android:layout_width="145dp"
+                    android:layout_height="145dp"
+                    android:id="@+id/sleep_mode"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/sleepmodeandroid"
+                    android:layout_gravity="left"
+                    android:layout_weight="1"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+            </LinearLayout>
+
+
+            <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="3">
@@ -89,9 +184,29 @@
                 android:src="@drawable/doorsecurityoffandroid"
                 android:layout_gravity="left"
                 android:layout_weight="1"
-                />
+            />
+                <ImageButton
+                    android:layout_width="145dp"
+                    android:layout_height="145dp"
+                    android:id="@+id/theater_mode"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/moviemodeandroid"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"/>
+
+
+                <ImageButton
+                    android:layout_width="145dp"
+                    android:layout_height="145dp"
+                    android:src="@drawable/curtains_closedandroid"
+                    android:id="@+id/image_curtains"
+                    android:scaleType="fitCenter"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    />
 
         </LinearLayout>
+
 
 
         <ProgressBar

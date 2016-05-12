@@ -28,10 +28,12 @@
     <!-- Network State Permissions to detect Internet status -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/slamsandroid"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">

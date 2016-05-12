@@ -28,8 +28,15 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:borderWidth="0dp"
         android:layout_gravity="bottom|end"
+        app:backgroundTint="#f61e49"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:contentDescription="SOS"
+        android:focusable="true"
+        android:src="@drawable/sos_symbol1"
+        android:baselineAlignBottom="false"
+        android:clickable="false"
+        android:focusableInTouchMode="false" />
 
 </android.support.design.widget.CoordinatorLayout>

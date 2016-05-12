@@ -48,8 +48,9 @@ public class GCMIntentService extends GCMBaseIntentService {
      * */
     @Override
     protected void onMessage(Context context, Intent intent) {
-        Log.i(TAG, "Received message");
         String message = intent.getExtras().getString("warning");
+        Log.i(TAG, "Received message"+message);
+
 
         displayMessage(context, message,100);
         // notifies user
@@ -103,6 +104,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setContentTitle(title)
                 .setContentText(message)
                 .setTicker(message);
+        mbuilder.setDefaults(Notification.DEFAULT_ALL);
 
         Intent notificationIntent = new Intent(context, MainActivity.class);
         // set intent so it does not start a new activity

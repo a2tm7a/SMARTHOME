@@ -11,25 +11,26 @@ public class CommonUtilities {
 
         static String LOGIN_URL(String Ip)
         {
-            return "http://"+Ip+":8080/logincheck";
+            return "http://"+Ip+":9000/logincheck";
         }
 
         static String DATA_URL(String Ip)
         {
-        return "http://"+Ip+":8080/data";
+        return "http://"+Ip+":9000/data";
         }
 
         static String APPLICATION_URL(String Ip,String endpoint)
         {
-        return "http://"+Ip+":8080/"+endpoint;
+        return "http://"+Ip+":9000/"+endpoint;
         }
 
         static String GCM_REGISTER_URL(String Ip)
         {
-            return "http://"+Ip+":8080/storeGcmUser";
+            return "http://"+Ip+":9000/storeGcmUser";
         }
 
         static final int Code_LoginRequest=2;
+        static final int Code_SOS=4;
 
         static final int Code_Application=3;
 

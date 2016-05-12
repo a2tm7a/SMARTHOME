@@ -2,9 +2,13 @@ package com.example.manchanda.smarthome;
 
 import android.animation.Animator;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +17,7 @@ import android.text.Editable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -103,8 +108,45 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                String endpoint = "sos";
+                Log.d("inside onclick listener", "floatingactionbutton");
+                int status = 3;
+                double longitude;
+                double latitude;
+                GPSTracker gps;
+                gps = new GPSTracker(MainActivity.this);
+
+                // check if GPS enabled
+                if (gps.canGetLocation()) {
+
+                    latitude = gps.getLatitude();
+                    longitude = gps.getLongitude();
+
+                    // \n is for new line
+                    Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+
+                    SOSRequest obj_SOSrequest = new SOSRequest(MainActivity.this, spinner, MainActivity.this, "sos", latitude, longitude);
+
+                    /**
+                     * Starting to make http request
+                     */
+
+                    try {
+                        spinner.setVisibility(View.VISIBLE);
+                        obj_SOSrequest.execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        spinner.setVisibility(View.INVISIBLE);
+                    }
+
+                } else {
+                    // can't get location
+                    // GPS or Network is not enabled
+                    // Ask user to enable GPS/network in settings
+                    gps.showSettingsAlert();
+                }
+                Log.d("bulb button clicked", status + "");
+
             }
         });
 
@@ -115,6 +157,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu m = navigationView.getMenu();
+        SubMenu topChannelMenu = m.addSubMenu("Sensor Readings");
+        topChannelMenu.add("Will be available after you log in");
+        MenuItem mi = m.getItem(m.size()-1);
+        mi.setTitle(mi.getTitle());
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -261,7 +308,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        /*if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
@@ -273,7 +320,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
-        }
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -323,18 +370,38 @@ public class MainActivity extends AppCompatActivity
             try {
                 Intent i = new Intent(getApplicationContext(),Controller.class);
                 JSONObject jsonObject = new JSONObject(data);
-                i.putExtra("lights", jsonObject.getString("lights"));
+                i.putExtra("lights1", jsonObject.getString("lights1"));
+                i.putExtra("lights2", jsonObject.getString("lights2"));
                 i.putExtra("security", jsonObject.getString("security"));
                 i.putExtra("fan", jsonObject.getString("fan"));
                 i.putExtra("automatic", jsonObject.getString("automatic"));
                 i.putExtra("curtains", jsonObject.getString("curtains"));
+                i.putExtra("temperature", jsonObject.getString("temperature"));
+
+                i.putExtra("humidity", jsonObject.getString("humidity"));
+
+                i.putExtra("co2emission", jsonObject.getString("co2emission"));
+                i.putExtra("connected_user", jsonObject.getString("connected_user"));
                 startActivity(i);
                 this.finish();
-                Log.d("lights",jsonObject.getString("lights"));
+                Log.d("lights1",jsonObject.getString("lights1"));
             } catch (JSONException e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(),"Error try again",Toast.LENGTH_LONG).show();
             }
+
+        }
+        else if(code == CommonUtilities.Code_SOS)
+        {
+            if(data.equalsIgnoreCase("1"))
+            {
+                Toast.makeText(MainActivity.this,"SOS send",Toast.LENGTH_LONG).show();
+            }
+            else if(data.equalsIgnoreCase("0"))
+            {
+                Toast.makeText(MainActivity.this,"Error occured",Toast.LENGTH_LONG).show();
+            }
+            spinner.setVisibility(View.INVISIBLE);
 
         }
     }
