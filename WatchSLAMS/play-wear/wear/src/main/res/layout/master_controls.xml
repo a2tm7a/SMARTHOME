@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/rl_master_fragment"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:deviceIds="wear_round">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="@drawable/overlay">
+		<ImageButton
+			android:id="@+id/lights"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/bulb_on_wear"
+			android:background="@null"
+			android:layout_marginTop="49dp"
+			android:layout_alignParentTop="true"
+			android:layout_toStartOf="@+id/security" />
+
+		<ImageButton
+			android:id="@+id/fan"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/fanoff_wear"
+			android:background="@null"
+			android:layout_alignTop="@+id/lights"
+			android:layout_toEndOf="@+id/security" />
+
+		<ImageButton
+			android:id="@+id/security"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/door_securityoffwear"
+			android:padding="10dp"
+			android:background="@null"
+			android:layout_below="@+id/lights"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="30dp" />
+
+
+
+
+	</RelativeLayout>
+
+</RelativeLayout>

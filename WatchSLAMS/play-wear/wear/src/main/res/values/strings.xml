@@ -1,0 +1,7 @@
+<resources>
+	<string name="app_name">Play</string>
+	<string name="hello_round">Hello Round World!</string>
+	<string name="hello_square">Hello Square World!</string>
+	<string name="name">Song name</string>
+	<string name="artist">Song artist</string>
+</resources>

@@ -1,0 +1,49 @@
+<android.support.wearable.view.BoxInsetLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/box_layout"
+	android:layout_height="match_parent"
+	android:layout_width="match_parent">
+
+	<android.support.wearable.view.CardScrollView
+		android:id="@+id/card_scroll_view"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		app:layout_box="bottom">
+
+		<android.support.wearable.view.CardFrame
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:layout_gravity="bottom">
+
+			<LinearLayout
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:orientation="vertical"
+				android:paddingLeft="5dp">
+				<TextView
+					android:fontFamily="sans-serif-light"
+					android:layout_height="wrap_content"
+					android:layout_width="match_parent"
+					android:text="custom_card"
+					android:ellipsize="end"
+					android:singleLine="true"
+					android:id="@+id/title_card"
+					android:layout_marginLeft="5dp"
+					android:textColor="@color/black"
+					android:textSize="20sp"/>
+				<TextView
+					android:id="@+id/artist_card"
+					android:fontFamily="sans-serif-light"
+					android:layout_height="wrap_content"
+					android:layout_width="match_parent"
+					android:layout_marginLeft="5dp"
+					android:ellipsize="end"
+					android:singleLine="true"
+					android:text="description"
+					android:textColor="@color/black"
+					android:textSize="14sp"/>
+			</LinearLayout>
+		</android.support.wearable.view.CardFrame>
+	</android.support.wearable.view.CardScrollView>
+</android.support.wearable.view.BoxInsetLayout>
