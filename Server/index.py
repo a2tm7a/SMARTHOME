@@ -10,246 +10,408 @@ import time
 import requests
 import json
 from gcm import GCM
-#import RPi.GPIO as GPIO
-
-#GPIO.setmode(GPIO.BCM)
-
-#GPIO.setup(14,GPIO.OUT)
-#GPIO.setup(15,GPIO.IN)
-#GPIO.setup(18,GPIO.OUT)
-#GPIO.setup(7,GPIO.OUT)
-#GPIO.setup(25,GPIO.OUT)
-
-#ser=serial.Serial('/dev/ttyAMA0' , 9600)
-#ser.open()
+import collections
+from saveDB import saveFromFanDB, saveFromSensorDB
+from prediction import predictSpeed
 
 db = MySQLdb.connect(configs_db["host"],configs_db["user"],configs_db["password"],configs_db["database"])
 cursor = db.cursor()
 
-'''ser = serial.Serial(
+ser = serial.Serial(
         port='/dev/ttyAMA0',
         baudrate = 9600,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
         bytesize=serial.EIGHTBITS,
         timeout=1
-)'''
+)
+
 
 
 @route('/')
 def greet(name='Stranger'):
-	print 'hello'
-	print os.path.dirname(os.path.abspath(__file__))
-	return static_file('index.html', root="/home/manchanda/Projects/SMARTHOME/html/ABOUT")
+        print 'hello'
+        print os.path.dirname(os.path.abspath(__file__))
+        return static_file('index.html',root="/home/pi/Desktop/SMARTHOME/html/ABOUT")
 
 
 @get('/login')
 def login_page(name='Stranger'):
-	print 'hello'
-	print os.path.dirname(os.path.abspath(__file__))
-	return static_file('index.html', root="/home/manchanda/Projects/SMARTHOME/html/Login")
+        print 'hello'
+        print os.path.dirname(os.path.abspath(__file__))
+        return static_file('index.html',root="/home/pi/Desktop/SMARTHOME/html/Login")
 
+@post('/automatedFan')
+def login_page():
+        print "Welcome to Automated Fan"
+	saveFromFanDB()
+
+	saveFromSensorDB()
+	
+	speed = predictSpeed()
+
+	#speed=float(speed)
+	status_float=0.0
+	status_float=float(speed)
+	print type(status_float)
+	status=0
+	print type(status)
+	#status=int(status_float)
+	q=insertIntoFan(int(status_float),"Android App")
+        print q
+	
+	status_string=str(int(status_float))
+
+	return status_string
+        
 
 @post('/login') # or @route('/login', method='POST')
 def login():
-	username = request.forms.get('username')
-	password = request.forms.get('password')
-	if(username == configs_user['username'] and password == configs_user['password']):
-		condition_light="SELECT Status FROM Lights ORDER BY Time DESC LIMIT 1"
-		condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
-		condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
-		condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
-		condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
-		try:
-			cursor.execute(condition_light)
-			results = cursor.fetchall()
-			print results[0][0]
-			light_status=results[0][0]
+        username = request.forms.get('username')
+        password = request.forms.get('password')
+	
+        if(username == configs_user['username'] and password == configs_user['password']):
 
-			cursor.execute(condition_fan)
-			results = cursor.fetchall()
-			print results[0][0]
-			fan_status=results[0][0]
-
-			cursor.execute(condition_curtain)
-			results = cursor.fetchall()
-			print results[0][0]
-			curtain_status=results[0][0]
-
-			cursor.execute(condition_security)
-			results = cursor.fetchall()
-			print results[0][0]
-			security_status=results[0][0]
-
-
-			cursor.execute(condition_automaticmode)
-			results = cursor.fetchall()
-			print results[0][0]
-			automatic_status=results[0][0]
-
-
-			if(light_status == 0):
-				lights="bulb_off.png"
-			else:
-				lights="bulb_on.png"
-
-
-			if(automatic_status == 0):
-				automatic="unchecked"
-			else:
-				automatic="checked"
-			
-
-			
-			if(curtain_status == 0):
-				curtains="CURTAINS_CLOSED.png"
-			else:
-				curtains="CURTAINS_OPEN.png"
-			
-
-			if(security_status == 0):
-				security="doorSecurityOff.png"
-			else:
-				security="doorSecurityOn.png"
-
-
-
-			if(fan_status == 0):
-				fans="FAN_speed0.png"
-			elif(fan_status == 1):
-				fans="FAN_speed1.png"
-			elif(fan_status == 2):
-				fans="FAN_speed2.png"
-			elif(fan_status == 3):
-				fans="FAN_speed3.png"	
-			elif(fan_status == 4):
-				fans="FAN_speed4.png"	
-			else:
-				fans="FAN_speed5.png"
-
-
-		except:
-			print "DB Error" 
+		lights=""
+		automatic=""
+		curtains=""
+		security=""
+		fans=""
 		
-		return template('/home/manchanda/Projects/SMARTHOME/html/Application/index.html',light=lights, fan=fans, curtain=curtains, security=security, automatic=automatic)
-	else:
-		return template("<p> Login unsuccessful {{name}} {{pass1}} </p>",name=username, pass1=password)
+		results=selectFromLights1()
+		light_status1=results[0][0]
+		print light_status1
+		
+		results=selectFromLights2()
+		light_status2=results[0][0]
+		print light_status2
+		
+		results=selectFromFan()
+		fan_status=results[0][0]
+		print fan_status
+		
+		results=selectFromCurtain()
+		curtain_status=results[0][0]
+		print curtain_status
 
+		results=selectFromSecurity()
+		security_status=results[0][0]
+		print security_status
+
+		results=selectFromAutomaticMode()
+		automatic_status=results[0][0]
+		print automatic_status
+
+		results=selectFromSensorData()
+		print results[0][0],results[0][1],results[0][2]
+               	humidity=results[0][0]
+                temperature=results[0][1]
+               	co2emission=results[0][2]
+		
+		results=selectFromUsers()
+		connected_users=results
+		print connected_users	
+			
+                if(light_status1 == 0 and light_status2 == 0):
+                	lights="bulb_off.png"
+                else:
+                        lights="bulb_on.png"
+
+
+                if(automatic_status == 0):
+                        automatic="unchecked"
+                else:
+                        automatic="checked"
+
+                if(curtain_status == 0):
+                        curtains="CURTAINS_CLOSED.png"
+                else:
+                        curtains="CURTAINS_OPEN.png"
+
+                if(security_status == 0):
+                        security="doorSecurityOff.png"
+                else:
+                        security="doorSecurityOn.png"
+
+
+
+                if(fan_status == 0):
+                        fans="FAN_speed0.png"
+                elif(fan_status == 1):
+                        fans="FAN_speed1.png"
+                elif(fan_status == 2):
+                        fans="FAN_speed2.png"
+                elif(fan_status == 3):
+                        fans="FAN_speed3.png"
+                elif(fan_status == 4):
+                        fans="FAN_speed4.png"
+                else:
+                        fans="FAN_speed5.png"
+
+		print lights
+                return template('/home/pi/Desktop/SMARTHOME/html/Application/index.html',light=lights, fan=fans, curtain=curtains, security=security, automatic=automatic, connected_devices=connected_users,temperature=temperature,humidity=humidity,co2emission=co2emission)
+        else:
+                return template("<p> Login unsuccessful {{name}} {{pass1}} </p>",name=username, pass1=password)
+
+
+def date_handler(obj):
+    return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
 @route('/test')
 def testing():
-	print "hee"
-	username=configs['username']+configs['password']
-	return 'Hey'+username
+        print "hee"
+        username=configs_user['username']+configs_user['password']
+        return 'Hey'+username
 
+@get('/watchLights')
+def toggleLights():
+	result=selectFromLights1()
+	lights1=result[0][0]
+	print lights1
+	
+	result=selectFromLights2()
+	lights2=result[0][0]
+	print lights2
+	
+	if(lights1 == 0 and lights2 == 0):
+        	q=insertIntoLights1("1","Watch")
+		print q
+		
+		q=insertIntoLights2("1","Watch")
+                print q
+
+        else:
+                q=insertIntoLights2("0","Watch")
+		print q
+
+		q=insertIntoLights1("0","Watch")
+                print q
+
+@get('/watchFan')
+def toggleLights():
+        result=selectFromFan()
+        fan=result[0][0]
+        print fan
+
+        if(fan==0):
+                q=insertIntoFan("5","Watch")
+                print q
+
+        else:
+                q=insertIntoFan("0","Watch")
+                print q
+
+@get('/watchSecurity')
+def toggleLights():
+        result=selectFromSecurity()
+        security=result[0][0]
+        print security
+
+        if(security==0):
+                q=insertIntoSecurity("1","Watch")
+                print q
+
+        else:
+                q=insertIntoSecurity("0","Watch")
+                print q
 
 @post('/lights_control')
 def toggle():
-	print "Hello Lights are toggle"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_light="INSERT INTO Lights(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_light
-	try:
-		cursor.execute(condition_light)
-		db.commit()
+        print "Hello Lights are toggle"
+        status = request.forms.get('status')
+        Interface = request.forms.get('Interface')
+        
+	q=insertIntoLights1(status,Interface)
+	print q
+	
+	q=insertIntoLights2(status,Interface)
+	print q
 		
+        return request.forms.get('status')
 
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
-	return request.forms.get('status')
+@post('/lights_control1')
+def toggle():
+        print "Hello Lights1 are toggle"
+        status = request.forms.get('status')
+        Interface = request.forms.get('Interface')
+        q=insertIntoLights1(status,Interface)
+	print q
+        return request.forms.get('status')
+
+@post('/lights_control2')
+def toggle():
+        print "Hello Lights2 are toggle"
+        status = request.forms.get('status')
+        Interface = request.forms.get('Interface')
+	q=insertIntoLights2(status,Interface)
+	print q
+        return request.forms.get('status')
 
 
 @post('/security_control')
 def toggle():
-	print "Hello Security are toggle"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_security
-	'''
-	if(status==1):
-                ser.write('t')
-                #senddata('t')
-        elif(status==0):
-                #senddata('s')
-                ser.write('s')
-        condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
- 	'''       
- 	print condition_security
-	try:
-		cursor.execute(condition_security)
-		db.commit()
-		
-
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
+        print "Hello Security are toggle"
+        status = request.forms.get('status')
+        Interface = request.forms.get('Interface')
+        q=insertIntoSecurity(status,Interface)
+	print q
 	return request.forms.get('status')
 
 
 @post('/fan_control')
 def toggle():
-	print "Hello Fan speed changed"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_fan="INSERT INTO Fan(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_fan
-	try:
-		cursor.execute(condition_fan)
-		db.commit()
-		
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
-	return request.forms.get('status')
+        print "Hello Fan speed changed"
+        status = request.forms.get('status')
+        Interface = request.forms.get('Interface')
+        q=insertIntoFan(status,Interface)
+	print q
+
+        return request.forms.get('status')
 
 
 
 @post('/curtain_control')
 def toggle():
-	print "Hello Curtains changed"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_curtains
-	try:
-		cursor.execute(condition_curtains)
-		db.commit()
-		
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
+        print "Hello Curtains changed"
+        status = request.forms.get('status')
+        Interface = request.forms.get('Interface')
+        q=insertIntoCurtain(status,Interface)
+	print q
+	
 	return request.forms.get('status')
 
+@post('/away_mode_control')
+def toggle():
+        print "Hello Away Mode"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+
+
+	curtain_status=0
+        q=insertIntoCurtain(curtain_status,Interface)
+	print q
+		
+	fan_status=0
+	q=insertIntoFan(fan_status,Interface)
+	print q
+
+
+	security_status=1
+	q=insertIntoSecurity(security_status,Interface)
+	print q
+
+	light_status1=0
+	q=insertIntoLights1(light_status1,Interface)
+	print q
+
+
+	light_status2=0
+	q=insertIntoLights2(light_status2,Interface)
+	print q
+
+        return request.forms.get('status')
+
+
+@post('/morning_mode_control')
+def toggle():
+        print "Hello Morning Mode"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+
+
+	curtain_status=1
+        q=insertIntoCurtain(curtain_status,Interface)
+	print q
+		
+
+	security_status=0
+	q=insertIntoSecurity(security_status,Interface)
+	print q
+
+	light_status1=1
+	q=insertIntoLights1(light_status1,Interface)
+	print q
+
+
+	light_status2=1
+	q=insertIntoLights2(light_status2,Interface)
+	print q
+
+        return request.forms.get('status')
+
+
+@post('/sleep_mode_control')
+def toggle():
+        print "Hello Sleep Mode"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+
+
+	curtain_status=0
+        q=insertIntoCurtain(curtain_status,Interface)
+	print q
+
+
+	security_status=1
+	q=insertIntoSecurity(security_status,Interface)
+	print q
+
+	light_status1=0
+	q=insertIntoLights1(light_status1,Interface)
+	print q
+	
+
+	light_status2=0
+	q=insertIntoLights2(light_status2,Interface)
+	print q
+
+
+        return request.forms.get('status')
+
+@post('/theater_mode_control')
+def toggle():
+        print "Hello theater Mode"
+        status = request.forms.get('status')
+        status = int(status)
+        Interface = request.forms.get('Interface')
+        print Interface
+
+
+	curtain_status=0
+        q=insertIntoCurtain(curtain_status,Interface)
+	print q
+
+
+	light_status1=0
+	q=insertIntoLights1(light_status1,Interface)
+	print q
+
+
+	light_status2=0
+	q=insertIntoLights2(light_status2,Interface)
+	print q
+
+
+
+        return request.forms.get('status')
 
 
 @post('/automatic_control')
 def toggle():
-	print "Hello automatic_control changed"
-	status = request.forms.get('status')
-	status = int(status)
-	Interface = request.forms.get('Interface')
-	print Interface
-	condition_automaticmode="INSERT INTO AutomaticMode(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
-	print condition_automaticmode
-	try:
-		cursor.execute(condition_automaticmode)
-		db.commit()
-		
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback() 
-	return request.forms.get('status')
+        print "Hello automatic_control changed"
+        status = request.forms.get('status')
+        Interface = request.forms.get('Interface')
+	
+	q=insertIntoAutomaticMode(status,Interface)
+	print q	
+
+        return request.forms.get('status')
 
 
 
@@ -257,77 +419,135 @@ def toggle():
 
 @get('/logintest') # or @route('/login')
 def login():
-	return '''
-		<form action="/login" method="post">
-           	Username: <input name="username" type="text" />
-            	Password: <input name="password" type="password" />
-            	<input value="Login" type="submit" />
-        	</form>
-   		'''
+        return '''
+        <form action="/login" method="post">
+                    Username: <input name="username" type="text" />
+                    Password: <input name="password" type="password" />
+                    <input value="Login" type="submit" />
+                </form>
+            '''
 
 
 @post('/data') # or @route('/login', method='POST')
 def data():
+        print "Mobile end point for data"
 	
-	condition_light="SELECT Status FROM Lights ORDER BY Time DESC LIMIT 1"
-	condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
-	condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
-	condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
-	condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
+	humidity=0.00
+	temperature=0.00
+	co2emission=0            
 	data=""
-	try:
-		cursor.execute(condition_light)
-		results = cursor.fetchall()
-		print results[0][0]
-		light_status=results[0][0]
 
-		cursor.execute(condition_fan)
-		results = cursor.fetchall()
-		print results[0][0]
-		fan_status=results[0][0]
+				
+	results=selectFromLights1()
+        light_status1=results[0][0]
+        print light_status1
 
-		cursor.execute(condition_curtain)
-		results = cursor.fetchall()
-		print results[0][0]
-		curtain_status=results[0][0]
+        results=selectFromLights2()
+        light_status2=results[0][0]
+        print light_status2
 
-		cursor.execute(condition_security)
-		results = cursor.fetchall()
-		print results[0][0]
-		security_status=results[0][0]
+        results=selectFromFan()
+        fan_status=results[0][0]
+        print fan_status
 
+        results=selectFromCurtain()
+        curtain_status=results[0][0]
+        print curtain_status
 
-		cursor.execute(condition_automaticmode)
-		results = cursor.fetchall()
-		print results[0][0]
-		automatic_status=results[0][0]
+        results=selectFromSecurity()
+        security_status=results[0][0]
+        print security_status
 
-		data={'lights':light_status, 'fan':fan_status, 'curtains':curtain_status, 'security':security_status, 'automatic':automatic_status}
-	except MySQLdb.Error, e:
-		print e.args[0],e.args[1]
-		db.rollback()  
+        results=selectFromAutomaticMode()
+        automatic_status=results[0][0]
+        print automatic_status
 
-	return data
+        results=selectFromSensorData()
+        print results[0][0],results[0][1],results[0][2]
+        humidity=results[0][0]
+        temperature=results[0][1]
+        co2emission=results[0][2]
+
+        results=selectFromUsers()
+        connected_users=results
+        print connected_users
+
+        data={'lights1':light_status1,'lights2':light_status2, 'fan':fan_status,'curtains':curtain_status, 'security':security_status,'automatic':automatic_status,'temperature':temperature, 'humidity':humidity,'co2emission':co2emission,'connected_user':connected_users}
+        
+        return data
 
 @post('/logincheck') # or @route('/login', method='POST')
 def checklogin():
-	username = request.forms.get('username')
-	password = request.forms.get('password')
-	if(username == configs_user['username'] and password == configs_user['password']):
-		return "1"
+        username = request.forms.get('username')
+        password = request.forms.get('password')
+        if(username == configs_user['username'] and password == configs_user['password']):
+                return "1"
 
-	else:
-		return "0"
+        else:
+                return "0"
 
 
 
 def getdata():
-	return "Test data"
+        return "Test data"
 
 
 @post('/send_serialterminer')
 def senddata():
-	return null
+        return null
+
+@post('/sos')
+def helpFunction():
+	latitude = request.forms.get('latitude')
+	longitude = request.forms.get('longitude')
+	message="Amit needs help "+latitude+" ,"+longitude
+	sendMessageGcm(message)
+	print message
+
+@post('/test_gcm')
+def testingfunction():
+        message=request.forms.get('message')
+        sendMessageGcmtest('asdasdqwe123123',message)
+
+@post('/storeGcmUser')
+def storeGcmUser():
+        gcm_regId = request.forms.get('gcm_regId')
+        insert_data="INSERT INTO gcm_users(gcm_regid, created_at) VALUES('%s', NOW())" % (gcm_regId)
+        print insert_data
+        try:
+                cursor.execute(insert_data)
+                db.commit()
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+        return "0"
+
+def sendMessageGcm(message):
+	results=""
+	reg=""
+	gcm = GCM(gcm_api["GOOGLE_API_KEY"])
+	print message
+	data = {'warning': message}
+	condition_gcm="SELECT gcm_regid FROM gcm_users"
+	try:
+		cursor.execute(condition_gcm)
+		results = cursor.fetchall()
+		print results
+		#reg=results[0][0]
+		for reg in results:
+			reg=[reg[0]]
+			response = gcm.json_request(registration_ids=reg, data=data)
+			print response
+			reg
+			#print results
+	except MySQLdb.Error, e:
+		print e.args[0],e.args[1]
+		db.rollback()
+		print "returning 0"
+		return "0"
+	print "returning 1"
+	return "1"
+
 
 @get('/test_gcm')
 def testingfunction():
@@ -348,7 +568,273 @@ def storeGcmUser():
 		db.rollback()
 	return "0"
 
-def sendMessageGcm(registration_ids,message):
+def insertIntoLights1(status,Interface):
+	status = int(status)
+	print Interface
+        condition_light1="INSERT INTO Lights1(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_light1
+        if(status==1):
+                ser.write('c')
+		ser.write('e')
+        elif(status==0):
+                ser.write('d')
+		ser.write('f')
+        try:
+                cursor.execute(condition_light1)
+                db.commit()
+		return '1'
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+
+def insertIntoLights2(status,Interface):
+	status = int(status)
+        print Interface
+        condition_light2="INSERT INTO Lights2(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_light2
+        if(status==1):
+                ser.write('g')
+		ser.write('i')
+        elif(status==0):
+                ser.write('h')
+		ser.write('j')
+        try:
+                cursor.execute(condition_light2)
+                db.commit()
+		return '1'
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+
+def insertIntoFan(status,Interface):
+	
+	status = int(status)
+	print Interface
+	
+	results=selectFromSensorData()
+	humidity=results[0][0]
+	temperature=results[0][1]
+	
+	humidity=float(humidity)
+	temperature=float(temperature)
+	
+        condition_fan="INSERT INTO Fan(Status,Interface,Humidity,Temperature,Time) VALUES('%d','%s','%.2f',%.2f,NOW())" % (status, Interface,humidity,temperature)
+        print condition_fan
+	if(status==0):
+                        print "sending e"
+                        ser.write('l')
+                        #senddata('l')
+        elif(status==1):
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
+        elif(status==2):
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
+        elif(status==3):
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
+        elif(status==4):
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
+        elif(status==5):
+                        print "sneding k"
+                        #senddata('k')
+                        ser.write('k')
+
+	try:
+                cursor.execute(condition_fan)
+                db.commit()
+		return '1'
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+
+def insertIntoCurtain(status,Interface):
+	status = int(status)
+	print Interface
+        condition_curtains="INSERT INTO Curtains(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_curtains
+
+	if(status==1):
+                ser.write('o')
+        elif(status==0):
+                ser.write('p')
+
+        try:
+                cursor.execute(condition_curtains)
+                db.commit()
+		return '1'
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+
+def insertIntoSecurity(status,Interface):
+	status = int(status)
+	print Interface
+        condition_security="INSERT INTO Security(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_security
+        
+        if(status==1):
+                        print "sending t"
+                        ser.write('t')
+                        #senddata('t')
+        elif(status==0):
+                        print "sneding s"
+                        #senddata('s')
+                        ser.write('s')
+                
+        try:
+                cursor.execute(condition_security)
+                db.commit()
+		return '1'
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+                
+def insertIntoAutomaticMode(status,Interface):
+	status = int(status)
+        print Interface
+        condition_automaticmode="INSERT INTO AutomaticMode(Status,Interface,Time) VALUES('%d','%s',NOW())" % (status, Interface)
+        print condition_automaticmode
+	
+	if(status==1):
+                ser.write('b')
+
+        elif(status==0):
+                ser.write('a')
+
+        try:
+                cursor.execute(condition_automaticmode)
+                db.commit()
+		return '1'
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+		return '0'
+
+def selectFromLights1():
+	condition_light1="SELECT Status FROM Lights1 ORDER BY Time DESC LIMIT 1"
+	try:
+		cursor.execute(condition_light1)
+		results = cursor.fetchall()
+		return results
+	
+	except MySQLdb.Error, e:
+		print e.args[0],e.args[1]
+		db.rollback()
+		return 0
+
+def selectFromLights2():
+        condition_light2="SELECT Status FROM Lights2 ORDER BY Time DESC LIMIT 1"
+        try:
+                cursor.execute(condition_light2)
+                results = cursor.fetchall()
+                return results
+
+	except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromFan():
+        condition_fan="SELECT Status FROM Fan ORDER BY Time DESC LIMIT 1"
+
+        try:
+		cursor.execute(condition_fan)
+		results = cursor.fetchall()
+		return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromCurtain():
+       
+	condition_curtain="SELECT Status FROM Curtains ORDER BY Time DESC LIMIT 1"
+        try:
+                cursor.execute(condition_curtain)
+                results = cursor.fetchall()
+                return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromSecurity():
+
+        condition_security="SELECT Status FROM Security ORDER BY Time DESC LIMIT 1"
+
+        try:
+                cursor.execute(condition_security)
+                results = cursor.fetchall()
+                return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+                     
+def selectFromAutomaticMode():
+
+        condition_automaticmode="SELECT Status FROM AutomaticMode ORDER BY Time DESC LIMIT 1"
+
+        try:
+                cursor.execute(condition_automaticmode)
+                results = cursor.fetchall()
+                print results
+		return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromSensorData():
+
+        condition_sensor="SELECT Humidity, Temperature, Co2ppm FROM Sensor_Data ORDER BY Time DESC LIMIT 1"
+
+
+        try:
+                cursor.execute(condition_sensor)
+                results = cursor.fetchall()
+                return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+def selectFromUsers():
+
+        condition_user="SELECT Name FROM Users WHERE ONLINE = 1 AND NAME IS NOT NULL ORDER BY Time DESC"
+
+
+        try:
+                cursor.execute(condition_user)
+                results = cursor.fetchall()
+                return results
+
+        except MySQLdb.Error, e:
+                print e.args[0],e.args[1]
+                db.rollback()
+                return 0
+
+
+def sendMessageGcmtest(registration_ids,message):
 	'''url="https://android.googleapis.com/gcm/send"
 	headers = {'Authorization': 'key='+gcm["GOOGLE_API_KEY"],
 		'Content-Type':'application/json'}
@@ -387,4 +873,4 @@ def sendMessageGcm(registration_ids,message):
 
 
 
-run(host='192.168.0.120', port=8080, debug=True)
+run(host='192.168.0.162', port=9000, debug=True)

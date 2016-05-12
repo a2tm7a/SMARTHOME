@@ -5,7 +5,7 @@ from bottle import route, run, template,response, get, post,request, static_file
 
 def css1(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/stylesheets")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/stylesheets")
 
 
 
@@ -14,37 +14,37 @@ def css1(staticFiles) :
 
 def cssphotor(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/prettyPhoto/dark_rounded")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/prettyPhoto/dark_rounded")
 
 @route('/About/prettyPhoto/dark_square/<staticFiles>')
 
 def cssphotos(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/prettyPhoto/dark_square")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/prettyPhoto/dark_square")
 
 @route('/About/prettyPhoto/default/<staticFiles>')
 
 def cssphotod(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/prettyPhoto/default")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/prettyPhoto/default")
 
 @route('/About/prettyPhoto/facebook/<staticFiles>')
 
 def cssphotof(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/prettyPhoto/facebook")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/prettyPhoto/facebook")
 
 @route('/About/prettyPhoto/light_rounded/<staticFiles>')
 
 def cssphotolr(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/prettyPhoto/light_rounded")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/prettyPhoto/light_rounded")
 
 @route('/About/prettyPhoto/light_square/<staticFiles>')
 
 def cssphotols(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/prettyPhoto/light_square")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/prettyPhoto/light_square")
 
 
 
@@ -52,54 +52,54 @@ def cssphotols(staticFiles) :
 
 def imgt(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/images/team")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/images/team")
 
 @route('/About/images/flexslider/<staticFiles>')
 
 def imgt(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/images/flexslider")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/images/flexslider")
 
 
 @route('/About/images/<staticFiles>')
 
 def imgi(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/images")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/images")
 
 @route('/About/images/portfolio/<staticFiles>')
 
 def imgp(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/images/portfolio")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/images/portfolio")
 
 @route('/About/images/icons/<staticFiles>')
 
 def imgic(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/images/icons")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/images/icons")
 
 @route('/About/images/icons/social/<staticFiles>')
 
 def imgs(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/images/icons/social")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/images/icons/social")
 
 @route('/About/images/icons/social/big/<staticFiles>')
 
 def imgb(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/images/icons/social/big")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/images/icons/social/big")
 
 @route('/About/images/icons/social/small/<staticFiles>')
 
 def imgsmal(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/images/icons/social/small")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/images/icons/social/small")
 
 
 @route('/About/javascripts/<staticFiles>')
 
 def javas(staticFiles) :
 
-    return static_file(staticFiles , root="/home/manchanda/Projects/SMARTHOME/html/ABOUT/javascripts")
+    return static_file(staticFiles , root="/home/pi/Desktop/SMARTHOME/html/ABOUT/javascripts")
